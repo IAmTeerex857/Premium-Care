@@ -51,7 +51,7 @@ export function PageHero({
       <div
         aria-hidden
         className="pointer-events-none absolute -top-32 right-0 size-[28rem] rounded-full opacity-25 blur-[90px]"
-        style={{ background: 'radial-gradient(circle, #2EC4B6, transparent 68%)' }}
+        style={{ background: 'radial-gradient(circle, #9FD2EC, transparent 68%)' }}
       />
       <div className="shell relative py-14 md:py-20">
         <motion.div

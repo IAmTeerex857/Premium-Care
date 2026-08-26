@@ -46,7 +46,7 @@ function NewsletterForm() {
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Enter your email"
           aria-invalid={!!error}
-          className="h-[3.25rem] flex-1 rounded-full border-[1.5px] border-white/15 bg-white/8 px-5 text-[0.9375rem] text-white outline-none transition-all duration-200 placeholder:text-white/45 focus:border-[color:var(--color-accent)] focus:bg-white/12 focus:shadow-[0_0_0_3px_rgba(46,196,182,0.18)]"
+          className="h-[3.25rem] flex-1 rounded-full border-[1.5px] border-white/15 bg-white/8 px-5 text-[0.9375rem] text-white outline-none transition-all duration-200 placeholder:text-white/45 focus:border-[color:var(--color-sky)] focus:bg-white/12 focus:shadow-[0_0_0_3px_rgba(159,210,236,0.25)]"
         />
         <Button type="submit" variant="accent" size="lg" disabled={state !== 'idle'} className="sm:w-auto">
           <SubmitStatus state={state} idleLabel="Subscribe" successLabel="Subscribed" />
@@ -66,7 +66,7 @@ export function Footer() {
       <div
         aria-hidden
         className="pointer-events-none absolute -top-40 left-1/4 size-[36rem] rounded-full opacity-[0.14] blur-[110px]"
-        style={{ background: 'radial-gradient(circle, #2EC4B6, transparent 68%)' }}
+        style={{ background: 'radial-gradient(circle, #9FD2EC, transparent 68%)' }}
       />
 
       <div className="shell relative py-16 md:py-20">
@@ -77,6 +77,14 @@ export function Footer() {
             <p className="max-w-[22rem] text-[0.9375rem] leading-relaxed text-white/70">
               {site.description}
             </p>
+            <a
+              href={site.socials.find((s) => s.icon === 'instagram')!.href}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="inline-flex w-fit items-center gap-2 text-[0.875rem] font-medium text-[color:var(--color-sky)] transition-colors hover:text-[color:var(--color-gold)]"
+            >
+              <InstagramIcon size={15} /> @premiumcareinc
+            </a>
             <div className="flex gap-2.5">
               {site.socials.map((s) => {
                 const Icon = socialIcons[s.icon as keyof typeof socialIcons]
@@ -87,7 +95,7 @@ export function Footer() {
                     target="_blank"
                     rel="noreferrer noopener"
                     aria-label={s.label}
-                    className="grid place-items-center size-10 rounded-full border border-white/12 text-white/70 transition-all duration-300 [transition-timing-function:var(--ease-premium)] hover:scale-110 hover:border-[color:var(--color-accent)] hover:bg-[color:var(--color-accent)] hover:text-[color:var(--color-primary-dark)]"
+                    className="grid place-items-center size-10 rounded-full border border-white/12 text-white/70 transition-all duration-300 [transition-timing-function:var(--ease-premium)] hover:scale-110 hover:border-[color:var(--color-sky)] hover:bg-[color:var(--color-sky)] hover:text-[color:var(--color-primary-dark)]"
                   >
                     <Icon size={17} />
                   </a>
@@ -102,13 +110,13 @@ export function Footer() {
             <ul className="flex flex-col gap-3 text-[0.9375rem]">
               {navLinks.map((l) => (
                 <li key={l.to}>
-                  <Link to={l.to} className="inline-block text-white/70 transition-all duration-200 hover:translate-x-0.5 hover:text-[color:var(--color-accent)]">
+                  <Link to={l.to} className="inline-block text-white/70 transition-all duration-200 hover:translate-x-0.5 hover:text-[color:var(--color-sky)]">
                     {l.label}
                   </Link>
                 </li>
               ))}
               <li>
-                <Link to="/referral" className="inline-block text-white/70 transition-all duration-200 hover:translate-x-0.5 hover:text-[color:var(--color-accent)]">
+                <Link to="/referral" className="inline-block text-white/70 transition-all duration-200 hover:translate-x-0.5 hover:text-[color:var(--color-sky)]">
                   Make a Referral
                 </Link>
               </li>
@@ -121,7 +129,7 @@ export function Footer() {
             <ul className="flex flex-col gap-3 text-[0.9375rem]">
               {services.slice(0, 7).map((s) => (
                 <li key={s.slug}>
-                  <Link to={`/services/${s.slug}`} className="inline-block text-white/70 transition-all duration-200 hover:translate-x-0.5 hover:text-[color:var(--color-accent)]">
+                  <Link to={`/services/${s.slug}`} className="inline-block text-white/70 transition-all duration-200 hover:translate-x-0.5 hover:text-[color:var(--color-sky)]">
                     {s.title}
                   </Link>
                 </li>
@@ -134,23 +142,23 @@ export function Footer() {
             <h3 className="t-label mb-5 text-white/50">Get in Touch</h3>
             <ul className="flex flex-col gap-4 text-[0.9375rem]">
               <li>
-                <a href={site.phoneHref} className="flex items-start gap-3 text-white/70 transition-colors hover:text-[color:var(--color-accent)]">
-                  <Phone size={16} className="mt-1 shrink-0 text-[color:var(--color-accent)]" />
+                <a href={site.phoneHref} className="flex items-start gap-3 text-white/70 transition-colors hover:text-[color:var(--color-sky)]">
+                  <Phone size={16} className="mt-1 shrink-0 text-[color:var(--color-sky)]" />
                   <span>{site.phoneDisplay}</span>
                 </a>
               </li>
               <li>
-                <a href={site.emailHref} className="flex items-start gap-3 break-all text-white/70 transition-colors hover:text-[color:var(--color-accent)]">
-                  <Mail size={16} className="mt-1 shrink-0 text-[color:var(--color-accent)]" />
+                <a href={site.emailHref} className="flex items-start gap-3 break-all text-white/70 transition-colors hover:text-[color:var(--color-sky)]">
+                  <Mail size={16} className="mt-1 shrink-0 text-[color:var(--color-sky)]" />
                   <span>{site.email}</span>
                 </a>
               </li>
               <li className="flex items-start gap-3 text-white/70">
-                <MapPin size={16} className="mt-1 shrink-0 text-[color:var(--color-accent)]" />
+                <MapPin size={16} className="mt-1 shrink-0 text-[color:var(--color-sky)]" />
                 <span>{site.address.line1}<br />{site.address.city}, {site.address.state} {site.address.zip}</span>
               </li>
               <li className="flex items-start gap-3 text-white/70">
-                <Clock size={16} className="mt-1 shrink-0 text-[color:var(--color-accent)]" />
+                <Clock size={16} className="mt-1 shrink-0 text-[color:var(--color-sky)]" />
                 <span>
                   {site.hours.map((h) => (
                     <span key={h.days} className="block">{h.days}: {h.time}</span>
@@ -178,9 +186,9 @@ export function Footer() {
         <div className="mt-12 flex flex-col items-center gap-4 border-t border-white/10 pt-8 text-[0.8125rem] text-white/55 md:flex-row md:justify-between">
           <p>© {year} {site.name}. All rights reserved.</p>
           <nav aria-label="Legal" className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
-            <Link to="/privacy-policy" className="transition-colors hover:text-[color:var(--color-accent)]">Privacy Policy</Link>
-            <Link to="/terms-of-service" className="transition-colors hover:text-[color:var(--color-accent)]">Terms of Service</Link>
-            <Link to="/portal/login" className="transition-colors hover:text-[color:var(--color-accent)]">Staff Portal</Link>
+            <Link to="/privacy-policy" className="transition-colors hover:text-[color:var(--color-sky)]">Privacy Policy</Link>
+            <Link to="/terms-of-service" className="transition-colors hover:text-[color:var(--color-sky)]">Terms of Service</Link>
+            <Link to="/portal/login" className="transition-colors hover:text-[color:var(--color-sky)]">Staff Portal</Link>
             <span className="text-white/35">Licensed & Insured Home Care Agency</span>
           </nav>
         </div>

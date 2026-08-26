@@ -6,7 +6,7 @@ const inputBase =
   'bg-[color:var(--color-bg-muted)] border-[1.5px] border-[color:var(--color-line)] outline-none ' +
   'transition-[border-color,box-shadow] duration-200 ' +
   'placeholder:text-[color:var(--color-ink-muted)] ' +
-  'focus:border-[color:var(--color-primary-light)] focus:shadow-[0_0_0_3px_rgba(50,121,171,0.12)] ' +
+  'focus:border-[color:var(--color-primary-light)] focus:shadow-[0_0_0_3px_rgba(38,113,143,0.14)] ' +
   'disabled:opacity-60'
 
 const errorRing =

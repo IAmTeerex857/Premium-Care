@@ -56,7 +56,7 @@ export function Hero() {
               <CalendarCheck size={15} className="text-[color:var(--color-accent)]" /> Care can start in 48 hours
             </span>
             <span className="inline-flex items-center gap-2">
-              <Star size={15} className="fill-[color:var(--color-gold)] text-[color:var(--color-gold)]" /> 4.9 average family rating
+              <Star size={15} className="fill-[color:var(--color-gold-strong)] text-[color:var(--color-gold-strong)]" /> 4.9 average family rating
             </span>
           </motion.div>
         </div>

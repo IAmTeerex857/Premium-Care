@@ -15,12 +15,12 @@ export function CtaBand({
           <div
             aria-hidden
             className="pointer-events-none absolute -left-24 -top-24 size-[26rem] rounded-full opacity-30 blur-[90px]"
-            style={{ background: 'radial-gradient(circle, #2EC4B6, transparent 68%)' }}
+            style={{ background: 'radial-gradient(circle, #9FD2EC, transparent 68%)' }}
           />
           <div
             aria-hidden
             className="pointer-events-none absolute -bottom-28 -right-16 size-[24rem] rounded-full opacity-20 blur-[90px]"
-            style={{ background: 'radial-gradient(circle, #3279AB, transparent 68%)' }}
+            style={{ background: 'radial-gradient(circle, #E8CF95, transparent 68%)' }}
           />
 
           <div className="relative flex flex-col items-center gap-5">

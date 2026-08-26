@@ -15,10 +15,10 @@ const base =
 const variants: Record<Variant, string> = {
   primary:
     'text-white bg-[linear-gradient(135deg,var(--color-accent)_0%,var(--color-primary)_100%)] ' +
-    'shadow-[0_2px_8px_rgba(46,196,182,0.28)] hover:shadow-[0_8px_26px_rgba(46,196,182,0.42)] hover:-translate-y-px',
+    'shadow-[0_2px_8px_rgba(38,113,143,0.28)] hover:shadow-[0_8px_26px_rgba(38,113,143,0.42)] hover:-translate-y-px',
   accent:
-    'text-[color:var(--color-primary-dark)] bg-[color:var(--color-accent)] ' +
-    'shadow-[0_2px_8px_rgba(46,196,182,0.3)] hover:bg-[color:var(--color-accent-dark)] hover:text-white hover:-translate-y-px',
+    'text-[color:var(--color-primary-dark)] bg-[color:var(--color-sky)] ' +
+    'shadow-[0_2px_8px_rgba(159,210,236,0.55)] hover:bg-[color:var(--color-sky)] hover:-translate-y-px',
   secondary:
     'text-[color:var(--color-primary)] bg-transparent border-[1.5px] border-[color:var(--color-line)] ' +
     'hover:bg-[color:var(--color-bg-soft)] hover:border-[color:var(--color-primary-light)]',

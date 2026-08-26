@@ -4,15 +4,15 @@
  */
 export const site = {
   name: 'Premium Care',
-  tagline: 'We Are Here Because of You',
+  tagline: 'Compassion. Care. Quality of Life.',
   description:
     'Personalized in-home care, disability support, and skilled nursing that helps people live fully, safely, and independently.',
-  phone: '(555) 010-4827',
-  phoneHref: 'tel:+15550104827',
-  phoneDisplay: '(555) 010-4827',
-  email: 'hello@premiumcare.com',
-  emailHref: 'mailto:hello@premiumcare.com',
-  careersEmail: 'careers@premiumcare.com',
+  phone: '+1 (240) 437-2218',
+  phoneHref: 'tel:+12404372218',
+  phoneDisplay: '+1 (240) 437-2218',
+  email: 'info@premiumcareinc.com',
+  emailHref: 'mailto:info@premiumcareinc.com',
+  careersEmail: 'info@premiumcareinc.com',
   address: {
     line1: '1400 Beacon Street, Suite 300',
     city: 'Boston',
@@ -30,7 +30,7 @@ export const site = {
   emergencyNote: '24/7 on-call support for active clients',
   socials: [
     { label: 'Facebook', href: 'https://facebook.com', icon: 'facebook' },
-    { label: 'Instagram', href: 'https://instagram.com', icon: 'instagram' },
+    { label: 'Instagram', href: 'https://www.instagram.com/premiumcareinc?utm_source=qr', icon: 'instagram' },
     { label: 'LinkedIn', href: 'https://linkedin.com', icon: 'linkedin' },
     { label: 'YouTube', href: 'https://youtube.com', icon: 'youtube' },
   ],

@@ -97,7 +97,7 @@ export function Inbox({ kind }: { kind: SubmissionKind }) {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search name, email, message…"
-              className="h-11 w-full rounded-full border-[1.5px] border-[color:var(--color-line)] bg-white pl-10 pr-4 text-[0.875rem] outline-none transition-all focus:border-[color:var(--color-primary-light)] focus:shadow-[0_0_0_3px_rgba(50,121,171,0.12)]"
+              className="h-11 w-full rounded-full border-[1.5px] border-[color:var(--color-line)] bg-white pl-10 pr-4 text-[0.875rem] outline-none transition-all focus:border-[color:var(--color-primary-light)] focus:shadow-[0_0_0_3px_rgba(38,113,143,0.14)]"
             />
           </div>
         }

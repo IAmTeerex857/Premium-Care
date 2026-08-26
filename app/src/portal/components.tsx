@@ -26,7 +26,7 @@ export function Panel({ className, children }: { className?: string; children: R
 
 const statusStyles: Record<SubmissionStatus, string> = {
   new: 'bg-[color:var(--color-accent)]/12 text-[color:var(--color-accent-dark)] border-[color:var(--color-accent)]/25',
-  in_progress: 'bg-[color:var(--color-gold)]/12 text-[#9A6A15] border-[color:var(--color-gold)]/30',
+  in_progress: 'bg-[color:var(--color-gold)]/25 text-[color:var(--color-gold-ink)] border-[color:var(--color-gold-strong)]/40',
   closed: 'bg-[color:var(--color-bg-soft)] text-[color:var(--color-ink-muted)] border-[color:var(--color-line)]',
 }
 
@@ -40,10 +40,10 @@ export function StatusBadge({ status }: { status: SubmissionStatus }) {
 }
 
 const kindStyles: Record<SubmissionKind, string> = {
-  booking: 'bg-[#EAF3FA] text-[#1D4561]',
-  contact: 'bg-[#EFEAFA] text-[#4A3A8C]',
-  referral: 'bg-[#E7F6F3] text-[#1C7A70]',
-  application: 'bg-[#FBF0E6] text-[#8A5A1E]',
+  booking: 'bg-[#E2F1F9] text-[#16536F]',
+  contact: 'bg-[#EAF0FA] text-[#2F4A80]',
+  referral: 'bg-[#DFF0F8] text-[#0D394F]',
+  application: 'bg-[#FAF4E6] text-[#896B24]',
   newsletter: 'bg-[color:var(--color-bg-soft)] text-[color:var(--color-ink-secondary)]',
 }
 

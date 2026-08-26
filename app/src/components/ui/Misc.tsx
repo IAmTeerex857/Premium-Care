@@ -55,7 +55,7 @@ export function StarRating({ value = 5, size = 16 }: { value?: number; size?: nu
         <Star
           key={i}
           size={size}
-          className={i < value ? 'fill-[color:var(--color-gold)] text-[color:var(--color-gold)]' : 'text-[color:var(--color-line)]'}
+          className={i < value ? 'fill-[color:var(--color-gold-strong)] text-[color:var(--color-gold-strong)]' : 'text-[color:var(--color-line)]'}
         />
       ))}
     </div>
@@ -188,7 +188,7 @@ export function Notice({ tone = 'info', children }: { tone?: 'info' | 'warn'; ch
     <div className={cn(
       'rounded-xl border px-4 py-3 text-[0.875rem] leading-relaxed',
       tone === 'warn'
-        ? 'border-[color:var(--color-warm)]/35 bg-[color:var(--color-warm)]/8 text-[#A03A3A]'
+        ? 'border-[color:var(--color-warm)]/35 bg-[color:var(--color-warm)]/8 text-[#8F3B37]'
         : 'border-[color:var(--color-primary-light)]/25 bg-[color:var(--color-primary-light)]/8 text-[color:var(--color-primary)]',
     )}>
       {children}

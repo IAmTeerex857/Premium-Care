@@ -36,21 +36,21 @@ export function OrbField({ className }: { className?: string }) {
       <div
         className="absolute -top-40 -left-28 size-[34rem] rounded-full opacity-[0.28] blur-[90px]"
         style={{
-          background: 'radial-gradient(circle at 30% 30%, #2EC4B6, transparent 68%)',
+          background: 'radial-gradient(circle at 30% 30%, #9FD2EC, transparent 68%)',
           animation: 'drift 22s ease-in-out infinite',
         }}
       />
       <div
         className="absolute -top-24 right-[-10rem] size-[30rem] rounded-full opacity-[0.22] blur-[100px]"
         style={{
-          background: 'radial-gradient(circle at 60% 40%, #3279AB, transparent 70%)',
+          background: 'radial-gradient(circle at 60% 40%, #E8CF95, transparent 70%)',
           animation: 'drift 28s ease-in-out infinite reverse',
         }}
       />
       <div
         className="absolute bottom-[-14rem] left-1/3 size-[28rem] rounded-full opacity-[0.16] blur-[110px]"
         style={{
-          background: 'radial-gradient(circle at 50% 50%, #1D4561, transparent 70%)',
+          background: 'radial-gradient(circle at 50% 50%, #26718F, transparent 70%)',
           animation: 'orb-float 24s ease-in-out infinite',
         }}
       />

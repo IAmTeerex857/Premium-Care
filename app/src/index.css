@@ -1,23 +1,37 @@
 @import "tailwindcss";
 
 @theme {
-  /* ---- Brand ---- */
-  --color-primary: #1D4561;
-  --color-primary-light: #3279AB;
-  --color-primary-dark: #0F2A3D;
-  --color-accent: #2EC4B6;
-  --color-accent-dark: #24A99C;
-  --color-warm: #FF6B6B;
-  --color-gold: #F0A93B;
+  /* ---- Brand ----------------------------------------------------------
+     Two colors come straight from the Premium Care logo:
+       sky  #9FD2EC   gold #E8CF95
+     Both are pastels (1.6:1 and 1.5:1 on white), so they are DECORATIVE
+     only on light backgrounds. The blue and gold scales below are derived
+     from their hues (200deg / 42deg) to carry text and fills accessibly.
+     Every value here is verified at WCAG AA against the surface it sits on.
+  --------------------------------------------------------------------- */
+  --color-sky: #9FD2EC;            /* brand light blue — fills, dark-bg text */
+  --color-gold: #E8CF95;           /* brand gold — accents, dark-bg text     */
 
-  /* ---- Neutrals ---- */
+  --color-primary: #16536F;        /* headings, nav          8.40:1 on white */
+  --color-primary-light: #26718F;  /* links, hover           5.47:1 on white */
+  --color-primary-dark: #0D394F;   /* footer, deep surfaces 12.24:1 on white */
+  --color-accent: #26718F;         /* CTA fills w/ white text                */
+  --color-accent-dark: #16536F;
+  --color-accent-soft: #419BC8;    /* decorative icons/dots only             */
+
+  --color-gold-ink: #896B24;       /* gold that can hold text 5.01:1 on white*/
+  --color-gold-strong: #D3A945;    /* stars, decorative emphasis             */
+
+  --color-warm: #C2544F;           /* errors / urgent                        */
+
+  /* ---- Neutrals (cooled toward the brand blue) ---- */
   --color-bg: #FFFFFF;
-  --color-bg-soft: #F1F3F5;
-  --color-bg-muted: #F8F9FA;
-  --color-ink: #1A1A2E;
-  --color-ink-secondary: #4C555F;
-  --color-ink-muted: #7C8C9C;
-  --color-line: #E2E8F0;
+  --color-bg-soft: #F1F6F9;
+  --color-bg-muted: #F8FBFC;
+  --color-ink: #14212B;
+  --color-ink-secondary: #47606E;
+  --color-ink-muted: #5A7183;
+  --color-line: #DCE7EE;
 
   /* ---- Type ---- */
   --font-display: "Geist", "Geist Fallback", system-ui, -apple-system, sans-serif;
@@ -68,7 +82,7 @@
   }
 
   ::selection {
-    background: color-mix(in srgb, var(--color-accent) 25%, transparent);
+    background: color-mix(in srgb, var(--color-sky) 55%, transparent);
     color: var(--color-primary-dark);
   }
 

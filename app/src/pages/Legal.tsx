@@ -137,7 +137,7 @@ function LegalPage({ eyebrow, title, lead, updated, effective, sections }: {
                 </ul>
               </section>
 
-              <p className="rounded-xl border border-[color:var(--color-warm)]/30 bg-[color:var(--color-warm)]/6 p-5 text-[0.8125rem] leading-relaxed text-[#A03A3A]">
+              <p className="rounded-xl border border-[color:var(--color-warm)]/30 bg-[color:var(--color-warm)]/6 p-5 text-[0.8125rem] leading-relaxed text-[#8F3B37]">
                 <strong className="font-semibold">Draft for review.</strong> This document was prepared as a
                 working draft and is not legal advice. Health care privacy obligations — including HIPAA, state
                 privacy statutes, and home-care licensing rules — vary by jurisdiction and by how your agency

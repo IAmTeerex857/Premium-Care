@@ -139,8 +139,8 @@ function LegalPage({ eyebrow, title, lead, updated, effective, sections }: {
 
               <p className="rounded-xl border border-[color:var(--color-warm)]/30 bg-[color:var(--color-warm)]/6 p-5 text-[0.8125rem] leading-relaxed text-[#8F3B37]">
                 <strong className="font-semibold">Draft for review.</strong> This document was prepared as a
-                working draft and is not legal advice. Health care privacy obligations — including HIPAA, state
-                privacy statutes, and home-care licensing rules — vary by jurisdiction and by how your agency
+                working draft and is not legal advice. Health care privacy obligations, including HIPAA, state
+                privacy statutes, and home-care licensing rules, vary by jurisdiction and by how your agency
                 actually operates. Have counsel review and adapt it before launch.
               </p>
             </div>
@@ -162,7 +162,7 @@ const privacySections: Section[] = [
     blocks: [
       { type: 'p', text: `${site.name} ("Premium Care", "we", "us", or "our") provides in-home care, disability support, and skilled nursing services. We understand that inviting a care provider into your life means trusting us with information that is personal, medical, and financial. This policy explains what we collect, why we collect it, who we share it with, and the choices you have.` },
       { type: 'p', text: 'This policy covers our website, our online forms, our staff portal, and the information we collect in the course of delivering care. It applies to clients, prospective clients, family members and authorized representatives, professional referral partners, job applicants, and website visitors.' },
-      { type: 'p', text: '**A note on two different sets of rules.** Information you submit through this website — a contact form, a consultation request — is governed by this policy. Once you become a client, the medical information we create and maintain about your care is additionally governed by our **Notice of Privacy Practices** under HIPAA, which we provide at the start of services. Where the two documents differ regarding protected health information, the Notice of Privacy Practices controls.' },
+      { type: 'p', text: '**A note on two different sets of rules.** Information you submit through this website, a contact form, a consultation request, is governed by this policy. Once you become a client, the medical information we create and maintain about your care is additionally governed by our **Notice of Privacy Practices** under HIPAA, which we provide at the start of services. Where the two documents differ regarding protected health information, the Notice of Privacy Practices controls.' },
     ],
   },
   {
@@ -171,13 +171,13 @@ const privacySections: Section[] = [
     blocks: [
       { type: 'sub', text: 'Information you give us directly' },
       { type: 'list', items: [
-        '**Contact details** — name, email address, postal address, and phone number.',
-        '**Relationship information** — whether you are enquiring for yourself or on behalf of a parent, spouse, child, or client, and your authority to do so.',
-        '**Care information** — the needs you describe, including diagnoses, mobility, cognition, current supports, medications, and safety concerns.',
-        '**Scheduling preferences** — preferred dates, times, and the services you are interested in.',
-        '**Insurance and funding information** — your funding source, member or policy identifiers, and information needed to verify benefits on your behalf.',
-        '**Referral information** — when a professional refers a client, the referrer’s details and the client information they provide.',
-        '**Employment information** — for job applicants: work history, certifications, licenses, availability, and anything else submitted through our careers page.',
+        '**Contact details**: name, email address, postal address, and phone number.',
+        '**Relationship information**: whether you are enquiring for yourself or on behalf of a parent, spouse, child, or client, and your authority to do so.',
+        '**Care information**: the needs you describe, including diagnoses, mobility, cognition, current supports, medications, and safety concerns.',
+        '**Scheduling preferences**: preferred dates, times, and the services you are interested in.',
+        '**Insurance and funding information**: your funding source, member or policy identifiers, and information needed to verify benefits on your behalf.',
+        '**Referral information**: when a professional refers a client, the referrer’s details and the client information they provide.',
+        '**Employment information**: for job applicants: work history, certifications, licenses, availability, and anything else submitted through our careers page.',
       ]},
       { type: 'sub', text: 'Information we create in the course of care' },
       { type: 'list', items: [
@@ -188,7 +188,7 @@ const privacySections: Section[] = [
       ]},
       { type: 'sub', text: 'Information collected automatically' },
       { type: 'list', items: [
-        'Standard server and device information — IP address, browser type, operating system, referring page, and pages visited.',
+        'Standard server and device information, IP address, browser type, operating system, referring page, and pages visited.',
         'Cookies and similar technologies, as described in the Cookies section below.',
       ]},
       { type: 'p', text: 'We do not knowingly collect information from children under 13 through this website. Where we provide services to a minor, we collect their information from a parent or legal guardian.' },
@@ -209,13 +209,13 @@ const privacySections: Section[] = [
     blocks: [
       { type: 'p', text: 'We use your information for the following purposes, and no others:' },
       { type: 'list', items: [
-        '**To respond to you** — returning your call or message, answering questions, and scheduling a consultation.',
-        '**To provide care** — assessing needs, building and updating your care plan, matching and scheduling caregivers, and coordinating with your other providers.',
-        '**To handle payment** — verifying benefits, submitting claims, invoicing, and collecting payment.',
-        '**To run our operations** — quality review, supervision, caregiver training, complaint handling, and internal auditing.',
-        '**To meet legal obligations** — licensing, accreditation, mandatory reporting, public health reporting, and responding to lawful requests.',
-        '**To improve our website** — understanding which pages are useful and diagnosing technical problems.',
-        '**To communicate with you** — service notices and, only if you have opted in, our newsletter.',
+        '**To respond to you**: returning your call or message, answering questions, and scheduling a consultation.',
+        '**To provide care**: assessing needs, building and updating your care plan, matching and scheduling caregivers, and coordinating with your other providers.',
+        '**To handle payment**: verifying benefits, submitting claims, invoicing, and collecting payment.',
+        '**To run our operations**: quality review, supervision, caregiver training, complaint handling, and internal auditing.',
+        '**To meet legal obligations**: licensing, accreditation, mandatory reporting, public health reporting, and responding to lawful requests.',
+        '**To improve our website**: understanding which pages are useful and diagnosing technical problems.',
+        '**To communicate with you**: service notices and, only if you have opted in, our newsletter.',
       ]},
       { type: 'p', text: 'We do **not** sell personal information. We do **not** share your information with third parties for their own marketing purposes. We do **not** use your care information to target advertising.' },
     ],
@@ -226,12 +226,12 @@ const privacySections: Section[] = [
     blocks: [
       { type: 'p', text: 'We share your information only where it is necessary, and only with:' },
       { type: 'list', items: [
-        '**Your care team** — the caregivers, nurses, and coordinators assigned to you.',
-        '**Other providers involved in your care** — physicians, therapists, hospitals, pharmacies, and facilities, where the disclosure is for treatment purposes or where you have authorized it.',
-        '**People you have authorized** — family members, an authorized representative, a health care proxy, or a power of attorney, to the extent you have designated them.',
-        '**Payers** — Medicaid, Medicare, insurers, VA programs, and claims administrators, for verification, authorization, and payment.',
-        '**Service providers** — vendors who host our systems, process payments, or provide software, each bound by written confidentiality obligations and, where they handle PHI, by a Business Associate Agreement.',
-        '**Authorities** — where required by law, including licensing bodies, public health reporting, mandatory reporting of suspected abuse or neglect, and valid legal process such as a subpoena or court order.',
+        '**Your care team**: the caregivers, nurses, and coordinators assigned to you.',
+        '**Other providers involved in your care**: physicians, therapists, hospitals, pharmacies, and facilities, where the disclosure is for treatment purposes or where you have authorized it.',
+        '**People you have authorized**: family members, an authorized representative, a health care proxy, or a power of attorney, to the extent you have designated them.',
+        '**Payers**: Medicaid, Medicare, insurers, VA programs, and claims administrators, for verification, authorization, and payment.',
+        '**Service providers**: vendors who host our systems, process payments, or provide software, each bound by written confidentiality obligations and, where they handle PHI, by a Business Associate Agreement.',
+        '**Authorities**: where required by law, including licensing bodies, public health reporting, mandatory reporting of suspected abuse or neglect, and valid legal process such as a subpoena or court order.',
       ]},
       { type: 'p', text: 'In the event of a merger, acquisition, or transfer of our business, client records may transfer to the successor entity, which would remain bound by the commitments in this policy and by applicable law.' },
     ],
@@ -242,9 +242,9 @@ const privacySections: Section[] = [
     blocks: [
       { type: 'p', text: 'Our website uses a small number of cookies and similar technologies:' },
       { type: 'list', items: [
-        '**Strictly necessary** — these keep your staff portal session signed in and protect against cross-site request forgery. The site cannot function without them.',
-        '**Preference** — these remember choices such as a dismissed notice.',
-        '**Analytics** — these help us understand aggregate traffic patterns. We configure analytics to avoid collecting information that identifies you individually.',
+        '**Strictly necessary**: these keep your staff portal session signed in and protect against cross-site request forgery. The site cannot function without them.',
+        '**Preference**: these remember choices such as a dismissed notice.',
+        '**Analytics**: these help us understand aggregate traffic patterns. We configure analytics to avoid collecting information that identifies you individually.',
       ]},
       { type: 'p', text: 'We do not use advertising cookies and we do not permit third-party advertising networks to track you across our site. You can block or delete cookies in your browser settings, though doing so will prevent the staff portal from working.' },
       { type: 'p', text: 'Our website honours the Global Privacy Control (GPC) signal where your browser sends one.' },
@@ -256,11 +256,11 @@ const privacySections: Section[] = [
     blocks: [
       { type: 'p', text: 'We keep information only as long as we need it, or as long as the law requires:' },
       { type: 'list', items: [
-        '**Client care records** — retained for the period required by applicable state and federal law, which for adult clients is commonly a minimum of six to ten years after the last date of service, and for minors is measured from the age of majority.',
-        '**Billing and claims records** — retained for the period required by the applicable payer program and by tax law.',
-        '**Website enquiries that do not become clients** — retained for up to 24 months, then deleted.',
-        '**Job applications** — retained for up to 12 months unless you ask us to keep them on file longer.',
-        '**Newsletter subscriptions** — retained until you unsubscribe.',
+        '**Client care records**: retained for the period required by applicable state and federal law, which for adult clients is commonly a minimum of six to ten years after the last date of service, and for minors is measured from the age of majority.',
+        '**Billing and claims records**: retained for the period required by the applicable payer program and by tax law.',
+        '**Website enquiries that do not become clients**: retained for up to 24 months, then deleted.',
+        '**Job applications**: retained for up to 12 months unless you ask us to keep them on file longer.',
+        '**Newsletter subscriptions**: retained until you unsubscribe.',
       ]},
       { type: 'p', text: 'When a retention period ends, we securely delete or destroy the information.' },
     ],
@@ -275,7 +275,7 @@ const privacySections: Section[] = [
         '**Correct** information you believe is inaccurate or incomplete.',
         '**Request deletion** of information, where no legal retention obligation applies.',
         '**Request restrictions** on how we use or disclose your health information.',
-        '**Request confidential communications** — for example, asking us to call a specific number or write to an alternative address.',
+        '**Request confidential communications**: for example, asking us to call a specific number or write to an alternative address.',
         '**Receive an accounting of disclosures** of your health information.',
         '**Opt out of marketing** at any time, using the unsubscribe link in any email or by contacting us.',
         '**Withdraw an authorization** you previously gave, effective going forward.',
@@ -311,7 +311,7 @@ const privacySections: Section[] = [
     id: 'changes',
     heading: 'Changes to this policy',
     blocks: [
-      { type: 'p', text: 'We may update this policy as our services, technology, or legal obligations change. We will revise the "Last updated" date at the top of this page, and where changes are material we will provide more prominent notice — by email to active clients, or by a notice on this website — before the change takes effect.' },
+      { type: 'p', text: 'We may update this policy as our services, technology, or legal obligations change. We will revise the "Last updated" date at the top of this page, and where changes are material we will provide more prominent notice, by email to active clients, or by a notice on this website, before the change takes effect.' },
       { type: 'p', text: 'Continued use of our website or services after a change takes effect indicates acceptance of the revised policy.' },
     ],
   },
@@ -319,7 +319,7 @@ const privacySections: Section[] = [
 
 export function PrivacyPolicy() {
   useSeo({
-    title: 'Privacy Policy — Premium Care',
+    title: 'Privacy Policy, Premium Care',
     description: 'How Premium Care collects, uses, protects, and shares personal and protected health information, and the privacy rights available to you.',
   })
 
@@ -376,7 +376,7 @@ const termsSections: Section[] = [
         'We may decline to accept a prospective client where the needs described fall outside our clinical scope, our service area, or our current capacity.',
         'Care begins only after an assessment has been completed and a written Service Agreement and Care Plan have been signed by both parties.',
       ]},
-      { type: 'p', text: 'If you submit a **referral** on behalf of another person, you represent that you have that person’s consent — or the consent of their authorized representative — to share their information with us and for us to contact them directly.' },
+      { type: 'p', text: 'If you submit a **referral** on behalf of another person, you represent that you have that person’s consent, or the consent of their authorized representative, to share their information with us and for us to contact them directly.' },
     ],
   },
   {
@@ -416,8 +416,8 @@ const termsSections: Section[] = [
     id: 'intellectual-property',
     heading: 'Intellectual property',
     blocks: [
-      { type: 'p', text: `All content on this Site — text, design, layout, graphics, logos, and the ${site.name} name and marks — is owned by us or used under license, and is protected by copyright, trademark, and other laws.` },
-      { type: 'p', text: 'You may view, download, and print pages from this Site for your own personal, non-commercial use in evaluating or receiving care. Any other use — reproduction, republication, distribution, or the creation of derivative works — requires our prior written permission.' },
+      { type: 'p', text: `All content on this Site, text, design, layout, graphics, logos, and the ${site.name} name and marks, is owned by us or used under license, and is protected by copyright, trademark, and other laws.` },
+      { type: 'p', text: 'You may view, download, and print pages from this Site for your own personal, non-commercial use in evaluating or receiving care. Any other use, reproduction, republication, distribution, or the creation of derivative works, requires our prior written permission.' },
       { type: 'p', text: 'If you send us feedback or suggestions about the Site, you grant us a non-exclusive, royalty-free, perpetual right to use them without obligation to you.' },
     ],
   },
@@ -442,7 +442,7 @@ const termsSections: Section[] = [
     heading: 'Limitation of liability',
     blocks: [
       { type: 'p', text: 'To the fullest extent permitted by law, Premium Care and its officers, employees, and agents will not be liable for any indirect, incidental, special, consequential, or punitive damages, or for any loss of data, revenue, or profits, arising out of or relating to your use of **this Site**.' },
-      { type: 'p', text: '**This limitation applies to the website only.** It does not limit our liability for personal injury, professional negligence, or any claim arising from the care services we deliver — those are governed by your Service Agreement and by applicable law, and nothing in these Terms waives any right you have in that respect.' },
+      { type: 'p', text: '**This limitation applies to the website only.** It does not limit our liability for personal injury, professional negligence, or any claim arising from the care services we deliver, those are governed by your Service Agreement and by applicable law, and nothing in these Terms waives any right you have in that respect.' },
       { type: 'p', text: 'Some jurisdictions do not permit certain limitations of liability. Where that is the case, the limitations above apply only to the extent permitted.' },
     ],
   },
@@ -466,14 +466,14 @@ const termsSections: Section[] = [
     heading: 'Suspension and termination',
     blocks: [
       { type: 'p', text: 'We may suspend or terminate your access to the Site, in whole or in part, at any time and without notice, where we reasonably believe you have breached these Terms or where necessary to protect the Site, our clients, or our staff.' },
-      { type: 'p', text: 'Sections that by their nature should survive termination — including intellectual property, disclaimers, limitation of liability, indemnification, and governing law — will survive.' },
+      { type: 'p', text: 'Sections that by their nature should survive termination, including intellectual property, disclaimers, limitation of liability, indemnification, and governing law, will survive.' },
     ],
   },
   {
     id: 'governing-law',
     heading: 'Governing law and disputes',
     blocks: [
-      { type: 'p', text: `These Terms are governed by the laws of the Commonwealth of Massachusetts, without regard to its conflict-of-laws rules. You agree that the state and federal courts located in ${site.address.city}, ${site.address.state} have exclusive jurisdiction over any dispute arising from these Terms or your use of the Site.` },
+      { type: 'p', text: `These Terms are governed by the laws of the State of Maryland, without regard to its conflict-of-laws rules. You agree that the state and federal courts located in ${site.address.city}, ${site.address.state} have exclusive jurisdiction over any dispute arising from these Terms or your use of the Site.` },
       { type: 'p', text: 'If any provision of these Terms is found unenforceable, that provision will be limited or severed to the minimum extent necessary, and the remaining provisions will stay in full force.' },
     ],
   },
@@ -489,7 +489,7 @@ const termsSections: Section[] = [
 
 export function TermsOfService() {
   useSeo({
-    title: 'Terms of Service — Premium Care',
+    title: 'Terms of Service, Premium Care',
     description: 'The terms governing use of the Premium Care website, its forms, and the staff portal.',
   })
 

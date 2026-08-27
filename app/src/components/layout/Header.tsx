@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils'
 import { Button, ArrowIcon } from '@/components/ui/Button'
 import { Logo } from './Logo'
 
-/** Thin accent progress bar at the very top — spec §11.3. */
+/** Thin accent progress bar at the very top, spec §11.3. */
 function ScrollProgress() {
   const { scrollYProgress } = useScroll()
   const scaleX = useSpring(scrollYProgress, { stiffness: 220, damping: 34, restDelta: 0.001 })
@@ -69,7 +69,7 @@ export function Header() {
                 end={l.to === '/'}
                 className={({ isActive }) =>
                   cn(
-                    'relative font-[var(--font-display)] text-[0.9375rem] font-medium transition-colors duration-200',
+                    'group/nav relative font-[var(--font-display)] text-[0.9375rem] font-medium transition-colors duration-200',
                     isActive
                       ? 'text-[color:var(--color-primary)]'
                       : 'text-[color:var(--color-ink-secondary)] hover:text-[color:var(--color-primary-light)]',
@@ -79,11 +79,12 @@ export function Header() {
                 {({ isActive }) => (
                   <>
                     {l.label}
-                    {/* active dot indicator — Recent.design pattern, spec §6 */}
+                    {/* active underline; also grows in on hover */}
                     <span
                       className={cn(
-                        'absolute -bottom-2 left-1/2 size-1 -translate-x-1/2 rounded-full bg-[color:var(--color-accent)] transition-all duration-300 [transition-timing-function:var(--ease-premium)]',
-                        isActive ? 'scale-100 opacity-100' : 'scale-0 opacity-0',
+                        'absolute -bottom-1.5 left-0 h-[2px] w-full origin-left rounded-full bg-[color:var(--color-primary)]',
+                        'transition-transform duration-300 [transition-timing-function:var(--ease-premium)]',
+                        isActive ? 'scale-x-100' : 'scale-x-0 group-hover/nav:scale-x-100',
                       )}
                     />
                   </>

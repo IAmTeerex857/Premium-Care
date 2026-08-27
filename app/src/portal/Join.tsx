@@ -26,7 +26,7 @@ const schema = z
 type FormValues = z.infer<typeof schema>
 
 export default function Join() {
-  useSeo({ title: 'Create Your Staff Account — Premium Care' })
+  useSeo({ title: 'Create Your Staff Account, Premium Care' })
 
   const { signUp, session } = useAuth()
   const navigate = useNavigate()
@@ -65,8 +65,7 @@ export default function Join() {
     >
       {done ? (
         <Notice>
-          Account created. If your project requires email confirmation, check your inbox before signing in —
-          otherwise you are being redirected now.
+          Account created. If your project requires email confirmation, check your inbox before signing in, otherwise you are being redirected now.
         </Notice>
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-5">

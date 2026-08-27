@@ -22,10 +22,10 @@ export function Logo({
 }) {
   if (tone === 'dark') {
     return (
-      <Link to="/" aria-label={`${site.name} — home`} className={cn('inline-block shrink-0', className)}>
+      <Link to="/" aria-label={`${site.name} home`} className={cn('inline-block shrink-0', className)}>
         <img
           src="/logo-full.png"
-          alt={`${site.name} — ${site.tagline}`}
+          alt={`${site.name}: ${site.tagline}`}
           width={640}
           height={459}
           className="h-20 w-auto md:h-24"
@@ -37,7 +37,7 @@ export function Logo({
   return (
     <Link
       to="/"
-      aria-label={`${site.name} — home`}
+      aria-label={`${site.name} home`}
       className={cn('group inline-flex items-center gap-2.5 shrink-0', className)}
     >
       <img

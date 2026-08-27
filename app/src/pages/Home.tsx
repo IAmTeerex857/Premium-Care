@@ -4,7 +4,6 @@ import { ServicesGrid } from '@/components/sections/ServicesGrid'
 import { MissionTabs } from '@/components/sections/MissionTabs'
 import { Process } from '@/components/sections/Process'
 import { Testimonials } from '@/components/sections/Testimonials'
-import { BlogPreview } from '@/components/sections/BlogPreview'
 import { CtaBand } from '@/components/sections/CtaBand'
 import { BookingForm } from '@/components/sections/BookingForm'
 import { SectionHeading } from '@/components/ui/Misc'
@@ -13,9 +12,9 @@ import { useSeo } from '@/hooks/useSeo'
 
 export default function Home() {
   useSeo({
-    title: 'Premium Care — Compassionate Home Care & Disability Support',
+    title: 'Premium Care, Compassionate Home Care & Disability Support',
     description:
-      'Personalized in-home care, disability support, and skilled nursing across Greater Boston. Free consultation, care can start within 48 hours.',
+      'Personalized in-home care, disability support, and skilled nursing across Maryland. Free consultation, care can start within 48 hours.',
   })
 
   return (
@@ -27,7 +26,7 @@ export default function Home() {
       <Process />
       <Testimonials />
 
-      {/* Homepage appointment form — spec §10.1 */}
+      {/* Homepage appointment form, spec §10.1 */}
       <section id="book" className="section bg-[color:var(--color-bg-soft)]">
         <div className="shell grid gap-12 lg:grid-cols-[0.85fr_1fr] lg:gap-16">
           <SectionHeading
@@ -40,7 +39,7 @@ export default function Home() {
               {[
                 'Free in-home assessment within 48 hours',
                 'Written care plan and pricing before anything starts',
-                'No long-term contract — change or stop any time',
+                'No long-term contract, change or stop any time',
               ].map((t) => (
                 <li key={t} className="flex items-start gap-3">
                   <span className="mt-2 size-1.5 shrink-0 rounded-full bg-[color:var(--color-accent)]" />
@@ -58,7 +57,6 @@ export default function Home() {
         </div>
       </section>
 
-      <BlogPreview />
       <CtaBand />
     </>
   )

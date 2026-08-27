@@ -203,9 +203,9 @@ export function SubmissionDetail({ id, kind, onChanged }: {
                 id="note"
                 value={noteText}
                 onChange={(e) => setNoteText(e.target.value)}
-                placeholder="Add a note — what you tried, what the family said, what happens next…"
+                placeholder="Add a note, what you tried, what the family said, what happens next…"
                 rows={3}
-                className="w-full resize-y rounded-xl border-[1.5px] border-[color:var(--color-line)] bg-[color:var(--color-bg-muted)] p-4 text-[0.9375rem] outline-none transition-all focus:border-[color:var(--color-primary-light)] focus:shadow-[0_0_0_3px_rgba(38,113,143,0.14)]"
+                className="w-full resize-y rounded-xl border-[1.5px] border-[color:var(--color-line)] bg-[color:var(--color-bg-muted)] p-4 text-[0.9375rem] outline-none transition-all focus:border-[color:var(--color-primary-light)] focus:shadow-[0_0_0_3px_rgba(39,89,155,0.15)]"
               />
               <Button type="submit" size="sm" className="self-start" disabled={!noteText.trim() || savingNote}>
                 <Send size={14} /> {savingNote ? 'Saving…' : 'Add note'}

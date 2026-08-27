@@ -30,7 +30,7 @@ export const missionTabs = [
     id: 'mission',
     label: 'Our Mission',
     heading: 'Care that lets people stay who they are',
-    body: 'We exist so that needing help with daily life never means giving up the life you built. Premium Care delivers professional, deeply personal support in the place people most want to be — their own home, surrounded by their own things, on their own schedule.',
+    body: 'We exist so that needing help with daily life never means giving up the life you built. Premium Care delivers professional, deeply personal support in the place people most want to be, their own home, surrounded by their own things, on their own schedule.',
     points: [
       'Person-centered plans, written with the client, not about them',
       'Consistent caregivers, because trust does not transfer',
@@ -53,7 +53,7 @@ export const missionTabs = [
   {
     id: 'approach',
     label: 'Our Approach',
-    heading: 'Assess, match, adjust — then keep listening',
+    heading: 'Assess, match, adjust, then keep listening',
     body: 'Care needs change, so a care plan that never changes is already failing. We start with a free in-home assessment, match a caregiver on skills and personality, and revisit the plan on a set cadence rather than waiting for something to go wrong.',
     points: [
       'Free in-home assessment within 48 hours',
@@ -110,7 +110,7 @@ export const processSteps = [
   {
     step: '02',
     title: 'In-home assessment',
-    body: 'A care manager visits within 48 hours to assess needs, safety, and the home itself — at no cost and with no obligation.',
+    body: 'A care manager visits within 48 hours to assess needs, safety, and the home itself, at no cost and with no obligation.',
   },
   {
     step: '03',
@@ -141,50 +141,11 @@ export const team = [
     bio: 'Hires and trains every caregiver. Screens for warmth first, then teaches the rest.' },
 ] as const
 
-/* ---------------- Insurance & coverage (spec §5, US-adapted) ---------------- */
-export const coverageOptions = [
-  {
-    icon: 'building-2',
-    title: 'Medicaid & HCBS Waivers',
-    body: 'We are an approved provider under state Home and Community-Based Services waiver programs. If you qualify, most or all of your personal care and companion hours may be covered.',
-    covers: ['Personal care', 'Companion care', 'Respite', 'Homemaker services'],
-  },
-  {
-    icon: 'shield-plus',
-    title: 'Medicare',
-    body: 'Medicare Part A and B cover intermittent skilled nursing and therapy when a physician certifies the need and you are considered homebound. It does not cover ongoing custodial care.',
-    covers: ['Skilled nursing', 'Physical & occupational therapy', 'Medical social services'],
-  },
-  {
-    icon: 'file-text',
-    title: 'Long-Term Care Insurance',
-    body: 'Most LTC policies reimburse in-home care once an elimination period is met. We bill your carrier directly and handle the documentation they require.',
-    covers: ['Personal care', 'In-home care', 'Skilled nursing', 'Respite'],
-  },
-  {
-    icon: 'medal',
-    title: 'VA Benefits',
-    body: 'Veterans may qualify through Aid & Attendance, Homemaker/Home Health Aide, or the Veteran-Directed Care program. Our team helps navigate the application.',
-    covers: ['Aid & Attendance', 'Homemaker/HHA', 'Veteran-Directed Care', 'Respite'],
-  },
-  {
-    icon: 'wallet',
-    title: 'Private Pay',
-    body: 'Straightforward hourly rates with no minimum contract and no hidden fees. You get a written rate sheet before care starts and you are billed only for hours delivered.',
-    covers: ['All services', 'Flexible scheduling', 'No long-term contract'],
-  },
-  {
-    icon: 'briefcase',
-    title: 'Workers’ Comp & Auto',
-    body: 'For injury-related care, we coordinate directly with your claims adjuster and case manager so approved services start without you fronting the cost.',
-    covers: ['Skilled nursing', 'Personal care', 'Transportation'],
-  },
-] as const
 
 export const faqs = [
   {
     q: 'How quickly can care start?',
-    a: 'For most requests we complete the in-home assessment within 48 hours and begin care within 3 to 5 days. Hospital discharges and urgent situations are prioritized — we have started same-day care when the need warranted it.',
+    a: 'For most requests we complete the in-home assessment within 48 hours and begin care within 3 to 5 days. Hospital discharges and urgent situations are prioritized, we have started same-day care when the need warranted it.',
   },
   {
     q: 'Is there a minimum number of hours?',
@@ -192,7 +153,7 @@ export const faqs = [
   },
   {
     q: 'What if we do not like our caregiver?',
-    a: 'You tell us and we rematch, without any awkward conversation on your end and at no cost. Fit is not a nice-to-have in this work — a caregiver who is not right for your household will not deliver good care no matter how skilled they are.',
+    a: 'You tell us and we rematch, without any awkward conversation on your end and at no cost. Fit is not a nice-to-have in this work, a caregiver who is not right for your household will not deliver good care no matter how skilled they are.',
   },
   {
     q: 'Are your caregivers insured and background-checked?',
@@ -204,7 +165,7 @@ export const faqs = [
   },
   {
     q: 'Can care change as needs change?',
-    a: 'That is the expectation, not the exception. Plans are formally reviewed on a set cadence and can be adjusted any time in between — increasing hours after a hospitalization, or reducing them as someone recovers.',
+    a: 'That is the expectation, not the exception. Plans are formally reviewed on a set cadence and can be adjusted any time in between, increasing hours after a hospitalization, or reducing them as someone recovers.',
   },
   {
     q: 'Do you provide care in facilities as well as homes?',
@@ -212,29 +173,29 @@ export const faqs = [
   },
   {
     q: 'What areas do you serve?',
-    a: 'Greater Boston and surrounding counties within roughly a 40-mile radius of our Brookline office. Call us if you are just outside that range — we can often still help or refer you to someone reputable who can.',
+    a: 'Anne Arundel, Howard, Baltimore, Montgomery, and Prince George’s counties, plus Baltimore City and the surrounding Maryland communities. Call us if you are just outside that range. We can often still help or refer you to someone reputable who can.',
   },
 ] as const
 
 /* ---------------- Careers ---------------- */
 export const jobOpenings = [
-  { id: 'hha-boston', title: 'Home Health Aide (HHA)', type: 'Full-time', location: 'Boston, MA',
-    dept: 'Direct Care', pay: '$21 – $26 / hour',
+  { id: 'hha-hanover', title: 'Home Health Aide (HHA)', type: 'Full-time', location: 'Hanover, MD',
+    dept: 'Direct Care', pay: '$21 - $26 / hour',
     blurb: 'Deliver personal care and daily living support to clients in their homes. Certification required; we pay for recertification.' },
-  { id: 'cna-cambridge', title: 'Certified Nursing Assistant (CNA)', type: 'Full-time', location: 'Cambridge, MA',
-    dept: 'Direct Care', pay: '$23 – $28 / hour',
+  { id: 'cna-columbia', title: 'Certified Nursing Assistant (CNA)', type: 'Full-time', location: 'Columbia, MD',
+    dept: 'Direct Care', pay: '$23 - $28 / hour',
     blurb: 'Hands-on clinical support under RN supervision, with a consistent client roster rather than a rotating schedule.' },
-  { id: 'rn-field', title: 'Registered Nurse — Field', type: 'Full-time', location: 'Greater Boston',
-    dept: 'Clinical', pay: '$78,000 – $95,000 / year',
+  { id: 'rn-field', title: 'Registered Nurse, Field', type: 'Full-time', location: 'Maryland',
+    dept: 'Clinical', pay: '$78,000 - $95,000 / year',
     blurb: 'Own a caseload of skilled nursing clients, run assessments, and supervise aide teams in the field.' },
-  { id: 'companion-pt', title: 'Companion Caregiver', type: 'Part-time', location: 'Brookline, MA',
-    dept: 'Direct Care', pay: '$19 – $23 / hour',
-    blurb: 'Companionship, light help, and outings. No certification required — we train. Ideal for students and retirees.' },
-  { id: 'coordinator', title: 'Care Coordinator', type: 'Full-time', location: 'Brookline, MA (Hybrid)',
-    dept: 'Operations', pay: '$58,000 – $68,000 / year',
+  { id: 'companion-pt', title: 'Companion Caregiver', type: 'Part-time', location: 'Hanover, MD',
+    dept: 'Direct Care', pay: '$19 - $23 / hour',
+    blurb: 'Companionship, light help, and outings. No certification required, we train. Ideal for students and retirees.' },
+  { id: 'coordinator', title: 'Care Coordinator', type: 'Full-time', location: 'Hanover, MD (Hybrid)',
+    dept: 'Operations', pay: '$58,000 - $68,000 / year',
     blurb: 'Be the single point of contact for a portfolio of families, managing schedules, benefits, and provider communication.' },
-  { id: 'scheduler', title: 'Staffing Scheduler', type: 'Full-time', location: 'Brookline, MA',
-    dept: 'Operations', pay: '$50,000 – $60,000 / year',
+  { id: 'scheduler', title: 'Staffing Scheduler', type: 'Full-time', location: 'Hanover, MD',
+    dept: 'Operations', pay: '$50,000 - $60,000 / year',
     blurb: 'Match caregivers to shifts, handle call-outs, and keep continuity intact. Fast-paced and genuinely important.' },
 ] as const
 

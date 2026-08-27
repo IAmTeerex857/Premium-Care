@@ -15,7 +15,7 @@ const base =
 const variants: Record<Variant, string> = {
   primary:
     'text-white bg-[linear-gradient(135deg,var(--color-accent)_0%,var(--color-primary)_100%)] ' +
-    'shadow-[0_2px_8px_rgba(38,113,143,0.28)] hover:shadow-[0_8px_26px_rgba(38,113,143,0.42)] hover:-translate-y-px',
+    'shadow-[0_2px_8px_rgba(39,89,155,0.28)] hover:shadow-[0_8px_26px_rgba(39,89,155,0.42)] hover:-translate-y-px',
   accent:
     'text-[color:var(--color-primary-dark)] bg-[color:var(--color-sky)] ' +
     'shadow-[0_2px_8px_rgba(159,210,236,0.55)] hover:bg-[color:var(--color-sky)] hover:-translate-y-px',
@@ -70,7 +70,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   )
 })
 
-/** Arrow that slides right on parent hover — spec §7 CTA behaviour. */
+/** Arrow that slides right on parent hover, spec §7 CTA behaviour. */
 export function ArrowIcon({ className }: { className?: string }) {
   return (
     <svg

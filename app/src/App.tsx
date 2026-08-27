@@ -7,15 +7,12 @@ import { PortalLayout } from '@/portal/PortalLayout'
 import { Inbox } from '@/portal/Inbox'
 import { PageFallback } from '@/components/ui/PageFallback'
 
-/* Public pages — code-split so the marketing site stays light. */
+/* Public pages, code-split so the marketing site stays light. */
 const Home = lazy(() => import('@/pages/Home'))
 const About = lazy(() => import('@/pages/About'))
 const Services = lazy(() => import('@/pages/Services'))
 const ServiceDetail = lazy(() => import('@/pages/ServiceDetail'))
-const Insurance = lazy(() => import('@/pages/Insurance'))
 const Careers = lazy(() => import('@/pages/Careers'))
-const Blog = lazy(() => import('@/pages/Blog'))
-const BlogPost = lazy(() => import('@/pages/BlogPost'))
 const Contact = lazy(() => import('@/pages/Contact'))
 const Referral = lazy(() => import('@/pages/Referral'))
 const NotFound = lazy(() => import('@/pages/NotFound'))
@@ -42,10 +39,7 @@ export default function App() {
               <Route path="about" element={<About />} />
               <Route path="services" element={<Services />} />
               <Route path="services/:slug" element={<ServiceDetail />} />
-              <Route path="insurance" element={<Insurance />} />
               <Route path="careers" element={<Careers />} />
-              <Route path="blog" element={<Blog />} />
-              <Route path="blog/:slug" element={<BlogPost />} />
               <Route path="contact" element={<Contact />} />
               <Route path="referral" element={<Referral />} />
               <Route path="privacy-policy" element={<PrivacyPolicy />} />
@@ -78,7 +72,7 @@ export default function App() {
                   <Route path="team" element={<Team />} />
                 </Route>
 
-                {/* Unknown portal path — send them to the dashboard. */}
+                {/* Unknown portal path, send them to the dashboard. */}
                 <Route path="*" element={<Navigate to="/portal" replace />} />
               </Route>
             </Route>

@@ -44,7 +44,7 @@ export function BookingForm({ compact = false }: { compact?: boolean }) {
         name: values.name,
         email: values.email,
         phone: values.phone,
-        subject: `Appointment request — ${values.service}`,
+        subject: `Appointment request, ${values.service}`,
         message: values.message || null as unknown as string,
         payload: {
           service: values.service,
@@ -91,7 +91,7 @@ export function BookingForm({ compact = false }: { compact?: boolean }) {
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-5">
       {!isSupabaseConfigured && (
         <Notice tone="warn">
-          Demo mode — Supabase is not connected, so this request will be stored locally in your browser
+          Demo mode: Supabase is not connected, so this request will be stored locally in your browser
           instead of reaching the staff portal.
         </Notice>
       )}
@@ -108,7 +108,7 @@ export function BookingForm({ compact = false }: { compact?: boolean }) {
           <option value="Spouse or partner">A spouse or partner</option>
           <option value="Child">A child</option>
           <option value="Other family member">Another family member</option>
-          <option value="A client (professional referral)">A client — I am a professional</option>
+          <option value="A client (professional referral)">A client, I am a professional</option>
         </Select>
         <Select label="Service needed" required error={errors.service?.message} wrapClass={compact ? '' : 'sm:col-span-2'} {...register('service')}>
           <option value="">Select a service…</option>
@@ -118,9 +118,9 @@ export function BookingForm({ compact = false }: { compact?: boolean }) {
         <Input label="Preferred date" type="date" min={today} required error={errors.date?.message} {...register('date')} />
         <Select label="Preferred time" required error={errors.time?.message} {...register('time')}>
           <option value="">Select a time…</option>
-          <option value="Morning (8am – 12pm)">Morning (8am – 12pm)</option>
-          <option value="Afternoon (12pm – 4pm)">Afternoon (12pm – 4pm)</option>
-          <option value="Late afternoon (4pm – 6pm)">Late afternoon (4pm – 6pm)</option>
+          <option value="Morning (8am - 12pm)">Morning (8am - 12pm)</option>
+          <option value="Afternoon (12pm - 4pm)">Afternoon (12pm - 4pm)</option>
+          <option value="Late afternoon (4pm - 6pm)">Late afternoon (4pm - 6pm)</option>
         </Select>
       </div>
 

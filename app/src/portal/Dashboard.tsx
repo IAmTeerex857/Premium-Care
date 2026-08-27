@@ -20,7 +20,7 @@ const tiles: { kind: SubmissionKind; label: string; to: string; icon: LucideIcon
 ]
 
 export default function Dashboard() {
-  useSeo({ title: 'Dashboard — Premium Care Portal' })
+  useSeo({ title: 'Dashboard, Premium Care Portal' })
 
   const { profile } = useAuth()
   const [rows, setRows] = useState<Submission[]>([])
@@ -161,7 +161,7 @@ export default function Dashboard() {
                             </p>
                           </div>
                           <p className="mt-1 truncate text-[0.875rem] text-[color:var(--color-ink-secondary)]">
-                            {r.subject ?? r.message ?? '—'}
+                            {r.subject ?? r.message ?? ', '}
                           </p>
                         </div>
                         <StatusBadge status={r.status} />

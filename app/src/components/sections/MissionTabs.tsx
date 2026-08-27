@@ -8,7 +8,7 @@ import { Reveal } from '@/components/ui/Reveal'
 
 const EASE = [0.23, 1, 0.32, 1] as const
 
-/** Segmented-control tabbed section — spec §8.3. */
+/** Segmented-control tabbed section, spec §8.3. */
 export function MissionTabs() {
   const [active, setActive] = useState<(typeof missionTabs)[number]['id']>(missionTabs[0].id)
   const tab = missionTabs.find((t) => t.id === active)!

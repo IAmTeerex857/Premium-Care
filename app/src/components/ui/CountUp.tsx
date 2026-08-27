@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useInView, useReducedMotion } from 'framer-motion'
 
-/** Stat number that counts up on scroll-into-view — spec §7. */
+/** Stat number that counts up on scroll-into-view, spec §7. */
 export function CountUp({
   to,
   suffix = '',

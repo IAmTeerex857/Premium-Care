@@ -11,7 +11,7 @@ const mapQuery = encodeURIComponent(site.address.full)
 
 export default function Contact() {
   useSeo({
-    title: 'Contact Us — Premium Care',
+    title: 'Contact Us, Premium Care',
     description: `Call ${site.phoneDisplay} or send a message. Free consultations, and we reply to every enquiry within one business day.`,
   })
 

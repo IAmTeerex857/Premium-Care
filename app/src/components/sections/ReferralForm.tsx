@@ -49,7 +49,7 @@ export function ReferralForm() {
         name: v.referrerName,
         email: v.referrerEmail,
         phone: v.referrerPhone,
-        subject: `Referral for ${v.clientName} — ${v.urgency}`,
+        subject: `Referral for ${v.clientName}, ${v.urgency}`,
         message: v.notes,
         payload: {
           referrer: { name: v.referrerName, organization: v.referrerOrg, role: v.referrerRole, email: v.referrerEmail, phone: v.referrerPhone },
@@ -91,7 +91,7 @@ export function ReferralForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-9">
       {!isSupabaseConfigured && (
-        <Notice tone="warn">Demo mode — Supabase is not connected, so this referral is stored locally in your browser.</Notice>
+        <Notice tone="warn">Demo mode: Supabase is not connected, so this referral is stored locally in your browser.</Notice>
       )}
       {serverError && <Notice tone="warn">{serverError}</Notice>}
 
@@ -123,10 +123,10 @@ export function ReferralForm() {
             <option value="Workers' compensation">Workers’ compensation</option>
             <option value="Unknown">Unknown / to be determined</option>
           </Select>
-          <Input label="Member or policy ID" hint="Optional — helps us verify benefits faster" error={errors.memberId?.message} {...register('memberId')} />
+          <Input label="Member or policy ID" hint="Optional, helps us verify benefits faster" error={errors.memberId?.message} {...register('memberId')} />
           <Select label="Urgency" required wrapClass="sm:col-span-2" error={errors.urgency?.message} {...register('urgency')}>
             <option value="">Select urgency…</option>
-            <option value="Urgent — care needed within 24 hours">Urgent — care needed within 24 hours</option>
+            <option value="Urgent, care needed within 24 hours">Urgent, care needed within 24 hours</option>
             <option value="Hospital discharge pending">Hospital discharge pending</option>
             <option value="Within 1 week">Within 1 week</option>
             <option value="Within 1 month">Within 1 month</option>

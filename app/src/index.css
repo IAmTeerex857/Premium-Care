@@ -2,36 +2,38 @@
 
 @theme {
   /* ---- Brand ----------------------------------------------------------
-     Two colors come straight from the Premium Care logo:
+     Two colours come straight from the Premium Care logo:
        sky  #9FD2EC   gold #E8CF95
-     Both are pastels (1.6:1 and 1.5:1 on white), so they are DECORATIVE
-     only on light backgrounds. The blue and gold scales below are derived
-     from their hues (200deg / 42deg) to carry text and fills accessibly.
-     Every value here is verified at WCAG AA against the surface it sits on.
-  --------------------------------------------------------------------- */
-  --color-sky: #9FD2EC;            /* brand light blue — fills, dark-bg text */
-  --color-gold: #E8CF95;           /* brand gold — accents, dark-bg text     */
+     Both are pastels (1.6:1 and 1.5:1 on white), so they are DECORATIVE on
+     light backgrounds and carry text only on dark surfaces.
 
-  --color-primary: #16536F;        /* headings, nav          8.40:1 on white */
-  --color-primary-light: #26718F;  /* links, hover           5.47:1 on white */
-  --color-primary-dark: #0D394F;   /* footer, deep surfaces 12.24:1 on white */
-  --color-accent: #26718F;         /* CTA fills w/ white text                */
-  --color-accent-dark: #16536F;
-  --color-accent-soft: #419BC8;    /* decorative icons/dots only             */
+     The blue scale sits at hue 214 (true blue). The logo's own blue is 200,
+     which leans cyan and reads green when used at UI scale.
+     Every value below is verified at WCAG AA on the surface it sits on.
+  --------------------------------------------------------------------- */
+  --color-sky: #9FD2EC;            /* brand light blue                       */
+  --color-gold: #E8CF95;           /* brand gold                             */
+
+  --color-primary: #1A4175;        /* headings, nav         10.21:1 on white */
+  --color-primary-light: #27599B;  /* links, CTAs            7.03:1 on white */
+  --color-primary-dark: #0F2A4D;   /* footer, deep surfaces 14.40:1 on white */
+  --color-accent: #27599B;         /* CTA fills with white text              */
+  --color-accent-dark: #1A4175;
+  --color-accent-soft: #4E82C4;    /* decorative icons and dots only         */
 
   --color-gold-ink: #896B24;       /* gold that can hold text 5.01:1 on white*/
   --color-gold-strong: #D3A945;    /* stars, decorative emphasis             */
 
-  --color-warm: #C2544F;           /* errors / urgent                        */
+  --color-warm: #C2544F;           /* errors, urgent                         */
 
-  /* ---- Neutrals (cooled toward the brand blue) ---- */
+  /* ---- Neutrals (cooled toward the blue) ---- */
   --color-bg: #FFFFFF;
-  --color-bg-soft: #F1F6F9;
-  --color-bg-muted: #F8FBFC;
-  --color-ink: #14212B;
-  --color-ink-secondary: #47606E;
-  --color-ink-muted: #5A7183;
-  --color-line: #DCE7EE;
+  --color-bg-soft: #F1F4F8;
+  --color-bg-muted: #F8FAFC;
+  --color-ink: #141D2A;
+  --color-ink-secondary: #485970;
+  --color-ink-muted: #5E7087;
+  --color-line: #DEE4ED;
 
   /* ---- Type ---- */
   --font-display: "Geist", "Geist Fallback", system-ui, -apple-system, sans-serif;
@@ -41,10 +43,10 @@
   /* ---- Motion ---- */
   --ease-premium: cubic-bezier(0.23, 1, 0.32, 1);
 
-  /* ---- Breakpoints (spec §4) ---- */
-  --breakpoint-sm: 30.0625rem;  /* 481px */
-  --breakpoint-md: 50.625rem;   /* 810px */
-  --breakpoint-lg: 75rem;       /* 1200px */
+  /* ---- Breakpoints ---- */
+  --breakpoint-sm: 30.0625rem;
+  --breakpoint-md: 50.625rem;
+  --breakpoint-lg: 75rem;
 }
 
 @layer base {
@@ -103,12 +105,12 @@
   }
   @media (min-width: 50.625rem) { .shell { padding-inline: 2.5rem; } }
 
-  /* Section rhythm — spec §14 */
+  /* Section rhythm, spec §14 */
   .section { padding-block: 3.75rem; }
   @media (min-width: 50.625rem) { .section { padding-block: 5rem; } }
   @media (min-width: 75rem)     { .section { padding-block: 7.5rem; } }
 
-  /* Type scale — spec §3 */
+  /* Type scale, spec §3 */
   .t-h1 { font-size: clamp(2.25rem, 1.35rem + 4.5vw, 4rem); font-weight: 700; line-height: 1.08; letter-spacing: -0.03em; }
   .t-h2 { font-size: clamp(1.75rem, 1.2rem + 2.75vw, 3rem);  font-weight: 600; line-height: 1.14; letter-spacing: -0.02em; }
   .t-h3 { font-size: clamp(1.375rem, 1.15rem + 1.1vw, 1.75rem); font-weight: 600; line-height: 1.25; letter-spacing: -0.01em; }
@@ -126,7 +128,7 @@
   }
 
   .card-lift { transition: transform 350ms var(--ease-premium), box-shadow 350ms var(--ease-premium); }
-  .card-lift:hover { transform: translateY(-4px); box-shadow: 0 18px 44px -12px rgba(15, 42, 61, 0.18); }
+  .card-lift:hover { transform: translateY(-4px); box-shadow: 0 18px 44px -12px rgba(15, 42, 77, 0.18); }
 
   .link-underline { position: relative; }
   .link-underline::after {
@@ -140,7 +142,7 @@
 @layer utilities {
   .tnum { font-variant-numeric: tabular-nums; }
 
-  /* Shimmer text — spec §9.4 (BeautifulUI) */
+  /* Shimmer text, spec §9.4 (BeautifulUI) */
   .shimmer-text {
     background-image: linear-gradient(90deg,
       var(--color-ink-muted) 35%, var(--color-ink) 50%, var(--color-ink-muted) 65%);
@@ -168,7 +170,7 @@
 @keyframes orb-float     { 0%,100% { transform: translate3d(0,0,0) scale(1); } 50% { transform: translate3d(3%, -4%, 0) scale(1.07); } }
 @keyframes drift         { 0%,100% { transform: translate3d(0,0,0); } 33% { transform: translate3d(4%, -6%, 0); } 66% { transform: translate3d(-4%, 4%, 0); } }
 
-/* Accessibility — spec §15 */
+/* Accessibility, spec §15 */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

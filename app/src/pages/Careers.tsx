@@ -39,8 +39,8 @@ type FormValues = z.infer<typeof schema>
 
 export default function Careers() {
   useSeo({
-    title: 'Careers — Premium Care',
-    description: 'Caregiver, CNA, RN, and operations roles across Greater Boston. Above-market pay, paid certification, and schedules you control.',
+    title: 'Careers, Premium Care',
+    description: 'Caregiver, CNA, RN, and operations roles across Maryland. Above-market pay, paid certification, and schedules you control.',
   })
 
   const [selectedRole, setSelectedRole] = useState('')
@@ -50,7 +50,7 @@ export default function Careers() {
       <PageHero
         eyebrow="Careers"
         title="Work somewhere the care actually matters"
-        lead="We are hiring caregivers, nurses, and coordinators across Greater Boston. Above-market pay, paid certification, and a schedule you set."
+        lead="We are hiring caregivers, nurses, and coordinators across Maryland. Above-market pay, paid certification, and a schedule you set."
       >
         <div className="mt-4">
           <Button href="#openings" size="lg">See open positions <ArrowIcon /></Button>
@@ -189,7 +189,7 @@ function ApplicationForm({ selectedRole }: { selectedRole: string }) {
     try {
       await createSubmission({
         kind: 'application', name: v.name, email: v.email, phone: v.phone,
-        subject: `Application — ${v.position}`, message: v.message,
+        subject: `Application, ${v.position}`, message: v.message,
         payload: {
           position: v.position, experience: v.experience,
           certifications: v.certifications, availability: v.availability,
@@ -224,7 +224,7 @@ function ApplicationForm({ selectedRole }: { selectedRole: string }) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-5">
       {!isSupabaseConfigured && (
-        <Notice tone="warn">Demo mode — Supabase is not connected, so this application is stored locally in your browser.</Notice>
+        <Notice tone="warn">Demo mode: Supabase is not connected, so this application is stored locally in your browser.</Notice>
       )}
       {serverError && <Notice tone="warn">{serverError}</Notice>}
 
@@ -239,10 +239,10 @@ function ApplicationForm({ selectedRole }: { selectedRole: string }) {
         </Select>
         <Select label="Care experience" required error={errors.experience?.message} {...register('experience')}>
           <option value="">Select…</option>
-          <option value="No experience — willing to train">No experience — willing to train</option>
+          <option value="No experience, willing to train">No experience, willing to train</option>
           <option value="Less than 1 year">Less than 1 year</option>
-          <option value="1–3 years">1–3 years</option>
-          <option value="3–5 years">3–5 years</option>
+          <option value="1-3 years">1-3 years</option>
+          <option value="3-5 years">3-5 years</option>
           <option value="5+ years">5+ years</option>
         </Select>
         <Select label="Availability" required error={errors.availability?.message} {...register('availability')}>
@@ -255,7 +255,7 @@ function ApplicationForm({ selectedRole }: { selectedRole: string }) {
         </Select>
         <Input
           label="Certifications" wrapClass="sm:col-span-2"
-          placeholder="HHA, CNA, RN, CPR, BLS…" hint="Optional — we pay for certification if you do not have one yet"
+          placeholder="HHA, CNA, RN, CPR, BLS…" hint="Optional, we pay for certification if you do not have one yet"
           error={errors.certifications?.message} {...register('certifications')}
         />
       </div>

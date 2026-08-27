@@ -1,5 +1,5 @@
 /**
- * All photography in one place — Unsplash hotlinks with sizing params.
+ * All photography in one place, Unsplash hotlinks with sizing params.
  * Replace the URLs here when real photography is ready; nothing else changes.
  */
 const u = (id: string, w = 1200, h?: number) =>
@@ -24,14 +24,6 @@ export const img = {
     'transportation': u('1590419690008-905895e8fe0d', 900, 675),
   } as Record<string, string>,
 
-  blog: {
-    'signs-a-loved-one-needs-help': u('1447452001602-7090c7ab2db3', 900, 600),
-    'paying-for-home-care': u('1554224155-6726b3ff858f', 900, 600),
-    'preventing-falls-at-home': u('1576091160550-2173dba999ef', 900, 600),
-    'caregiver-burnout': u('1527613426441-4da17471b66d', 900, 600),
-    'dementia-communication': u('1516307365426-bea591f05011', 900, 600),
-    'first-week-of-care': u('1580281658223-9b93f18ae9ae', 900, 600),
-  } as Record<string, string>,
 
   team: {
     dana: u('1594824476967-48c8b964273f', 400, 400),
@@ -48,6 +40,5 @@ export const img = {
   },
 
   careers: u('1600880292203-757bb62b4baf', 1200, 800),
-  insurance: u('1576091160399-112ba8d25d1d', 1200, 800),
   cta: u('1516574187841-cb9cc2ca948b', 1200, 800),
 }

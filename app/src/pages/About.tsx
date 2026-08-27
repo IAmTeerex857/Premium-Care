@@ -12,7 +12,7 @@ import { useSeo } from '@/hooks/useSeo'
 
 export default function About() {
   useSeo({
-    title: 'About Us — Premium Care',
+    title: 'About Us, Premium Care',
     description: 'Founded by a nurse who watched too many families settle for care that did not fit. Meet the team behind Premium Care.',
   })
 
@@ -46,11 +46,11 @@ export default function About() {
               <p>
                 She started Premium Care with a single conviction: continuity is not a scheduling luxury, it is
                 the clinical intervention. A caregiver who knows that Tuesday is a hard day, that the left knee
-                gives out on stairs, that a certain tone means pain rather than irritation — that caregiver
+                gives out on stairs, that a certain tone means pain rather than irritation, that caregiver
                 catches things a rotating roster never will.
               </p>
               <p>
-                Fifteen years later we serve more than five hundred families across Greater Boston. We still
+                Fifteen years later we serve more than five hundred families across Maryland. We still
                 assign one caregiver to one client and protect that pairing harder than anything else in the
                 business, because it is the entire reason the work succeeds.
               </p>

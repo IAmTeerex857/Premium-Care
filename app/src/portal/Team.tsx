@@ -24,7 +24,7 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>
 
 export default function Team() {
-  useSeo({ title: 'Team — Premium Care Portal' })
+  useSeo({ title: 'Team, Premium Care Portal' })
 
   const { profile } = useAuth()
   const [profiles, setProfiles] = useState<Profile[]>([])
@@ -230,7 +230,7 @@ export default function Team() {
 
           <Notice>
             <strong className="font-semibold">How invitations work:</strong> creating an invitation does not send an
-            email by itself — pass the join link to your new member however you normally would. When they sign up at{' '}
+            email by itself, pass the join link to your new member however you normally would. When they sign up at{' '}
             <code>/portal/join</code> with the invited email address, the database grants them the role you selected here.
           </Notice>
         </div>
@@ -309,8 +309,8 @@ function InviteForm({ adminId, onCreated }: { adminId: string; onCreated: (invit
           <Input label="Email address" type="email" required placeholder="name@premiumcare.com" error={errors.email?.message} {...register('email')} />
           <Input label="Full name" placeholder="Optional" error={errors.full_name?.message} {...register('full_name')} />
           <Select label="Role" required error={errors.role?.message} {...register('role')}>
-            <option value="member">Member — read and manage submissions</option>
-            <option value="admin">Admin — full access including Team</option>
+            <option value="member">Member, read and manage submissions</option>
+            <option value="admin">Admin, full access including Team</option>
           </Select>
         </div>
         <Button type="submit" size="md" className="self-start" disabled={state === 'loading'}>

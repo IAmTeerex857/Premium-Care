@@ -122,7 +122,7 @@ export function Accordion({ items }: { items: readonly { q: string; a: string }[
 /* ----------------------------- Submit button ------------------------------ */
 export type SubmitState = 'idle' | 'loading' | 'success' | 'error'
 
-/** Orb → checkmark morph on submit — spec §10 "Submit animation". */
+/** Orb → checkmark morph on submit, spec §10 "Submit animation". */
 export function SubmitStatus({ state, idleLabel, successLabel = 'Submitted' }: {
   state: SubmitState; idleLabel: string; successLabel?: string
 }) {

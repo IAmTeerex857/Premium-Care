@@ -31,14 +31,14 @@ export function PortalLayout() {
 
   return (
     <div className="min-h-dvh bg-[color:var(--color-bg-soft)]">
-      {/* Sidebar — desktop */}
+      {/* Sidebar, desktop */}
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-[16.5rem] flex-col border-r border-[color:var(--color-line)] bg-white lg:flex">
         <div className="px-6 py-6"><Logo /></div>
         <SidebarNav items={visible} />
         <SidebarFooter profile={profile} isAdmin={isAdmin} onSignOut={() => void signOut()} />
       </aside>
 
-      {/* Topbar — mobile */}
+      {/* Topbar, mobile */}
       <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-[color:var(--color-line)] bg-white px-5 lg:hidden">
         <Logo />
         <button

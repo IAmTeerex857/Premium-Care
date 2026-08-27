@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Clock, Mail, MapPin, Phone } from 'lucide-react'
-import { FacebookIcon, InstagramIcon, LinkedinIcon, YoutubeIcon } from './SocialIcons'
+import { InstagramIcon } from './SocialIcons'
 import { navLinks, site } from '@/data/site'
 import { services } from '@/data/services'
 import { createSubmission } from '@/lib/api'
@@ -9,7 +9,7 @@ import { Logo } from './Logo'
 import { Button, ArrowIcon } from '@/components/ui/Button'
 import { SubmitStatus, type SubmitState } from '@/components/ui/Misc'
 
-const socialIcons = { facebook: FacebookIcon, instagram: InstagramIcon, linkedin: LinkedinIcon, youtube: YoutubeIcon }
+const socialIcons = { instagram: InstagramIcon }
 
 function NewsletterForm() {
   const [email, setEmail] = useState('')

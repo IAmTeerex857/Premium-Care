@@ -15,7 +15,7 @@ export const services: Service[] = [
     title: 'In-Home Care',
     short: 'Everyday help that keeps people safely at home.',
     summary:
-      'Our most requested service. A caregiver you actually know comes to the house on a consistent schedule to help with the parts of the day that have gotten harder — meals, laundry, light housekeeping, medication reminders, and simply being there.',
+      'Our most requested service. A caregiver you actually know comes to the house on a consistent schedule to help with the parts of the day that have gotten harder, meals, laundry, light housekeeping, medication reminders, and simply being there.',
     icon: 'house',
     includes: [
       'Meal planning and preparation',
@@ -68,7 +68,7 @@ export const services: Service[] = [
     title: 'Respite Care',
     short: 'Short-term relief for family caregivers.',
     summary:
-      'Family caregivers burn out — quietly, and faster than anyone admits. Respite care gives you a few hours, a weekend, or a two-week vacation while someone qualified takes over, following the routine you have already built.',
+      'Family caregivers burn out, quietly, and faster than anyone admits. Respite care gives you a few hours, a weekend, or a two-week vacation while someone qualified takes over, following the routine you have already built.',
     icon: 'life-buoy',
     includes: [
       'Hourly, overnight, or extended respite',
@@ -86,7 +86,7 @@ export const services: Service[] = [
     title: 'Skilled Nursing',
     short: 'Licensed clinical care in the home.',
     summary:
-      'RN and LPN-delivered clinical care at home, coordinated directly with your physician. For people who need real medical oversight but do not need — or want — to be in a facility to get it.',
+      'RN and LPN-delivered clinical care at home, coordinated directly with your physician. For people who need real medical oversight but do not need, or want, to be in a facility to get it.',
     icon: 'stethoscope',
     includes: [
       'Wound care and dressing changes',
@@ -137,7 +137,7 @@ export const services: Service[] = [
     title: 'Transportation',
     short: 'Safe rides, with someone who stays.',
     summary:
-      'Door-through-door transportation to appointments, therapy, and community life. Our caregivers do not drop off and drive away — they walk you in, wait, take notes, and bring you home.',
+      'Door-through-door transportation to appointments, therapy, and community life. Our caregivers do not drop off and drive away, they walk you in, wait, take notes, and bring you home.',
     icon: 'car',
     includes: [
       'Medical and therapy appointments',

@@ -14,25 +14,22 @@ export const site = {
   emailHref: 'mailto:info@premiumcareinc.com',
   careersEmail: 'info@premiumcareinc.com',
   address: {
-    line1: '1400 Beacon Street, Suite 300',
-    city: 'Boston',
-    state: 'MA',
-    zip: '02446',
+    line1: '7000 Arundel Mills Circle, Suite 200',
+    city: 'Hanover',
+    state: 'MD',
+    zip: '21076',
     get full() {
       return `${this.line1}, ${this.city}, ${this.state} ${this.zip}`
     },
   },
   hours: [
-    { days: 'Monday – Friday', time: '8:00 AM – 6:00 PM ET' },
-    { days: 'Saturday', time: '9:00 AM – 2:00 PM ET' },
-    { days: 'Sunday', time: 'Closed — on-call support available' },
+    { days: 'Monday - Friday', time: '8:00 AM - 6:00 PM ET' },
+    { days: 'Saturday', time: '9:00 AM - 2:00 PM ET' },
+    { days: 'Sunday', time: 'Closed, on-call support available' },
   ],
   emergencyNote: '24/7 on-call support for active clients',
   socials: [
-    { label: 'Facebook', href: 'https://facebook.com', icon: 'facebook' },
     { label: 'Instagram', href: 'https://www.instagram.com/premiumcareinc?utm_source=qr', icon: 'instagram' },
-    { label: 'LinkedIn', href: 'https://linkedin.com', icon: 'linkedin' },
-    { label: 'YouTube', href: 'https://youtube.com', icon: 'youtube' },
   ],
 } as const
 
@@ -40,9 +37,7 @@ export const navLinks = [
   { label: 'Home', to: '/' },
   { label: 'About Us', to: '/about' },
   { label: 'Our Services', to: '/services' },
-  { label: 'Insurance', to: '/insurance' },
   { label: 'Careers', to: '/careers' },
-  { label: 'Blog', to: '/blog' },
   { label: 'Contact', to: '/contact' },
 ] as const
 

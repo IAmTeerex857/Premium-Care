@@ -35,7 +35,7 @@ export function Testimonials() {
         <SectionHeading
           tag="Client stories"
           title="What families tell us"
-          lead="Unedited feedback from the people we serve — the ones who were hesitant at first included."
+          lead="Unedited feedback from the people we serve, the ones who were hesitant at first included."
         />
 
         <div className="relative mx-auto mt-14 max-w-[46rem]">

@@ -45,7 +45,7 @@ export function PortalShell({ title, subtitle, children, footer }: {
 }
 
 export default function Login() {
-  useSeo({ title: 'Staff Sign In — Premium Care' })
+  useSeo({ title: 'Staff Sign In, Premium Care' })
 
   const { signIn, session, resetPassword } = useAuth()
   const navigate = useNavigate()

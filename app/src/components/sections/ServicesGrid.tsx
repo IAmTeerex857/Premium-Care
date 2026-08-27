@@ -65,10 +65,10 @@ export function ServicesGrid() {
         <SectionHeading
           tag="What we offer"
           title="Care shaped around one person at a time"
-          lead="Eight services that combine into a single plan — adjusted whenever the need changes, not on a fixed annual cycle."
+          lead="Eight services that combine into a single plan, adjusted whenever the need changes, not on a fixed annual cycle."
         />
 
-        {/* Bento grid — spec §8.2 */}
+        {/* Bento grid, spec §8.2 */}
         <RevealGroup className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           <RevealItem className="lg:col-span-2 lg:row-span-1">
             <ServiceCard service={first!} large />

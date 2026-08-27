@@ -22,7 +22,7 @@ export function Hero() {
       <div className="shell relative pb-16 pt-14 md:pb-20 md:pt-20">
         <div className="flex flex-col items-center text-center">
           <motion.div {...rise(0)}>
-            <Tag>Licensed &amp; insured · Serving Greater Boston</Tag>
+            <Tag>Licensed &amp; insured · Serving Maryland</Tag>
           </motion.div>
 
           <motion.h1 {...rise(0.08)} className="t-h1 mt-6 max-w-[45rem] text-[color:var(--color-primary-dark)]">
@@ -35,7 +35,7 @@ export function Hero() {
           </motion.h1>
 
           <motion.p {...rise(0.16)} className="t-lead mt-6 max-w-[36rem]">
-            Personalized in-home care, disability support, and skilled nursing — delivered by
+            Personalized in-home care, disability support, and skilled nursing, delivered by
             caregivers who show up consistently and treat your family like their own.
           </motion.p>
 
@@ -61,7 +61,7 @@ export function Hero() {
           </motion.div>
         </div>
 
-        {/* Hero image with floating UI cards — spec §7 */}
+        {/* Hero image with floating UI cards, spec §7 */}
         <motion.div
           initial={{ opacity: 0, y: 36, scale: 0.97 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -104,7 +104,7 @@ export function Hero() {
           </FloatingCard>
         </motion.div>
 
-        {/* Stats bar — spec §7 */}
+        {/* Stats bar, spec §7 */}
         <div className="mx-auto mt-14 grid max-w-[58rem] grid-cols-2 gap-y-9 md:grid-cols-4">
           {stats.map((s, i) => (
             <motion.div

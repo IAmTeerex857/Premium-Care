@@ -41,7 +41,7 @@ const statusFilters: Array<SubmissionStatus | 'all'> = ['all', 'new', 'in_progre
 
 export function Inbox({ kind }: { kind: SubmissionKind }) {
   const meta = config[kind]
-  useSeo({ title: `${meta.title} — Premium Care Portal` })
+  useSeo({ title: `${meta.title}, Premium Care Portal` })
 
   const { id } = useParams()
   const [rows, setRows] = useState<Submission[]>([])
@@ -97,7 +97,7 @@ export function Inbox({ kind }: { kind: SubmissionKind }) {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search name, email, message…"
-              className="h-11 w-full rounded-full border-[1.5px] border-[color:var(--color-line)] bg-white pl-10 pr-4 text-[0.875rem] outline-none transition-all focus:border-[color:var(--color-primary-light)] focus:shadow-[0_0_0_3px_rgba(38,113,143,0.14)]"
+              className="h-11 w-full rounded-full border-[1.5px] border-[color:var(--color-line)] bg-white pl-10 pr-4 text-[0.875rem] outline-none transition-all focus:border-[color:var(--color-primary-light)] focus:shadow-[0_0_0_3px_rgba(39,89,155,0.15)]"
             />
           </div>
         }
@@ -157,7 +157,7 @@ export function Inbox({ kind }: { kind: SubmissionKind }) {
                       )}
                     </div>
                     <p className="mt-1 line-clamp-1 text-[0.875rem] text-[color:var(--color-ink-secondary)]">
-                      {r.subject ?? r.message ?? '—'}
+                      {r.subject ?? r.message ?? ', '}
                     </p>
                   </div>
 

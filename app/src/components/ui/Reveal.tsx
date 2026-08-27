@@ -3,7 +3,7 @@ import type { ReactNode } from 'react'
 
 const EASE = [0.23, 1, 0.32, 1] as const
 
-/** fadeInUp on scroll-into-view — spec §11.1. */
+/** fadeInUp on scroll-into-view, spec §11.1. */
 export function Reveal({
   children,
   delay = 0,
@@ -33,7 +33,7 @@ export function Reveal({
   )
 }
 
-/** Parent that staggers its <RevealItem> children — spec §11.5. */
+/** Parent that staggers its <RevealItem> children, spec §11.5. */
 const containerVariants: Variants = {
   hidden: {},
   show: { transition: { staggerChildren: 0.08, delayChildren: 0.05 } },

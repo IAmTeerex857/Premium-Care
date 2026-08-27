@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils'
 
 /**
- * Thinking orb used inside submit buttons — spec §9.4 / §10 (Orbs-inspired).
+ * Thinking orb used inside submit buttons, spec §9.4 / §10 (Orbs-inspired).
  * Pure CSS so it costs nothing and respects prefers-reduced-motion.
  */
 export function ThinkingOrb({ className, size = 18 }: { className?: string; size?: number }) {
@@ -27,7 +27,7 @@ export function ThinkingOrb({ className, size = 18 }: { className?: string; size
 }
 
 /**
- * Ambient blurred gradient orbs for hero backgrounds — spec §11.5.
+ * Ambient blurred gradient orbs for hero backgrounds, spec §11.5.
  * Decorative only; pointer-events-none and aria-hidden.
  */
 export function OrbField({ className }: { className?: string }) {
@@ -50,7 +50,7 @@ export function OrbField({ className }: { className?: string }) {
       <div
         className="absolute bottom-[-14rem] left-1/3 size-[28rem] rounded-full opacity-[0.16] blur-[110px]"
         style={{
-          background: 'radial-gradient(circle at 50% 50%, #26718F, transparent 70%)',
+          background: 'radial-gradient(circle at 50% 50%, #27599B, transparent 70%)',
           animation: 'orb-float 24s ease-in-out infinite',
         }}
       />

@@ -15,7 +15,7 @@ export default function ServiceDetail() {
   const service = serviceBySlug(slug)
 
   useSeo({
-    title: service ? `${service.title} — Premium Care` : 'Service — Premium Care',
+    title: service ? `${service.title}, Premium Care` : 'Service, Premium Care',
     description: service?.short,
   })
 
@@ -79,8 +79,8 @@ export default function ServiceDetail() {
                 It depends on your plan and your clinical situation. We run a free benefits check before you
                 commit to anything and tell you exactly what is covered and what is not.
               </p>
-              <Link to="/insurance" className="group mt-4 inline-flex items-center gap-2 font-[var(--font-display)] text-[0.875rem] font-semibold text-[color:var(--color-primary)]">
-                See coverage options <ArrowIcon />
+              <Link to="/contact" className="group mt-4 inline-flex items-center gap-2 font-[var(--font-display)] text-[0.875rem] font-semibold text-[color:var(--color-primary)]">
+                Ask about coverage <ArrowIcon />
               </Link>
             </div>
           </div>

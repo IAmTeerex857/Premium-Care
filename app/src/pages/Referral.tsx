@@ -14,7 +14,7 @@ const steps = [
 
 export default function Referral() {
   useSeo({
-    title: 'Make a Referral — Premium Care',
+    title: 'Make a Referral, Premium Care',
     description: 'Referral form for discharge planners, social workers, physicians, and case managers. Same-day review, urgent referrals escalated immediately.',
   })
 
@@ -50,7 +50,7 @@ export default function Referral() {
                 <a href={site.phoneHref} className="link-underline font-medium text-[color:var(--color-primary)]">
                   {site.phoneDisplay}
                 </a>{' '}
-                instead — someone will pick up.
+                instead, someone will pick up.
               </p>
               <div className="mt-8">
                 <ReferralForm />

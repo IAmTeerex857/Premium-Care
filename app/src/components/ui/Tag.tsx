@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils'
 
-/** Section eyebrow pill — spec §9.3. */
+/** Section eyebrow pill, spec §9.3. */
 export function Tag({
   children,
   dot = true,

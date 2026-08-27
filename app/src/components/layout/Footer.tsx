@@ -62,7 +62,7 @@ export function Footer() {
   const year = new Date().getFullYear()
 
   return (
-    <footer className="relative overflow-hidden bg-[color:var(--color-primary-dark)] text-white/85">
+    <footer data-modal-background className="relative overflow-hidden bg-[color:var(--color-primary-dark)] text-white/85">
       <div
         aria-hidden
         className="pointer-events-none absolute -top-40 left-1/4 size-[36rem] rounded-full opacity-[0.14] blur-[110px]"

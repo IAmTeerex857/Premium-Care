@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { motion } from 'framer-motion'
 import { Check, Paperclip, X } from 'lucide-react'
-import { createSubmission, deleteResume, uploadResume } from '@/lib/api'
+import { createSubmission } from '@/lib/api'
 import { isSupabaseConfigured } from '@/lib/supabase'
 import { CheckboxPill, Input, Select, Textarea } from '@/components/ui/Field'
 import { Button, ArrowIcon } from '@/components/ui/Button'
@@ -86,15 +86,7 @@ export function CareerForm() {
     setServerError(null)
     setState('loading')
     try {
-      let resumePath: string | null = null
-      let resumeName: string | null = null
-      if (resume) {
-        resumePath = await uploadResume(resume)
-        resumeName = resume.name
-      }
-
-      try {
-        await createSubmission({
+      await createSubmission({
         kind: 'application',
         name: v.name,
         email: v.email,
@@ -111,15 +103,8 @@ export function CareerForm() {
           owns_car: v.ownsCar,
           preferred_shifts: v.shifts,
           heard_about_us: v.heardAbout,
-          resume_path: resumePath,
-          resume_filename: resumeName,
         },
-        })
-      } catch (err) {
-        // Do not leave the uploaded file orphaned in storage.
-        if (resumePath) await deleteResume(resumePath)
-        throw err
-      }
+      }, resume ?? undefined)
       setState('success')
       reset()
       setResume(null)
@@ -151,7 +136,7 @@ export function CareerForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-8">
-      {!isSupabaseConfigured && (
+      {import.meta.env.DEV && !isSupabaseConfigured && (
         <Notice tone="warn">Demo mode: Supabase is not connected, so this application is stored locally in your browser.</Notice>
       )}
       {serverError && <Notice tone="warn">{serverError}</Notice>}

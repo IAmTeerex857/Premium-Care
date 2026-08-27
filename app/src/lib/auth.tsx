@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import { isSupabaseConfigured, supabase } from './supabase'
 import type { Profile } from './types'
@@ -23,6 +23,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
+  const authRequestId = useRef(0)
 
   const loadProfile = useCallback(async (userId: string) => {
     if (!supabase) return null
@@ -42,22 +43,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     let active = true
 
+    const initialRequest = ++authRequestId.current
     supabase.auth.getSession().then(async ({ data }) => {
-      if (!active) return
+      if (!active || initialRequest !== authRequestId.current) return
       setSession(data.session)
-      if (data.session?.user) setProfile(await loadProfile(data.session.user.id))
-      if (active) setLoading(false)
+      const nextProfile = data.session?.user ? await loadProfile(data.session.user.id) : null
+      if (!active || initialRequest !== authRequestId.current) return
+      setProfile(nextProfile)
+      setLoading(false)
     })
 
     const { data: sub } = supabase.auth.onAuthStateChange(async (_event, next) => {
+      const request = ++authRequestId.current
       if (!active) return
       setSession(next)
-      setProfile(next?.user ? await loadProfile(next.user.id) : null)
+      const nextProfile = next?.user ? await loadProfile(next.user.id) : null
+      if (!active || request !== authRequestId.current) return
+      setProfile(nextProfile)
       setLoading(false)
     })
 
     return () => {
       active = false
+      authRequestId.current += 1
       sub.subscription.unsubscribe()
     }
   }, [loadProfile])
@@ -81,7 +89,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const { error } = await supabase.auth.signUp({
           email: email.trim(),
           password,
-          options: { data: { full_name: fullName.trim(), invite_code: inviteCode.trim().toUpperCase() } },
+          options: {
+            data: { full_name: fullName.trim(), invite_code: inviteCode.trim().toUpperCase() },
+            emailRedirectTo: `${window.location.origin}/portal/login`,
+          },
         })
         if (error) {
           // The signup trigger raises when no invitation exists. Supabase often
@@ -96,6 +107,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       async signOut() {
         if (!supabase) return
+        authRequestId.current += 1
         await supabase.auth.signOut()
         setProfile(null)
       },
@@ -115,7 +127,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       },
 
       async refreshProfile() {
-        if (session?.user) setProfile(await loadProfile(session.user.id))
+        if (!session?.user) return
+        const userId = session.user.id
+        const request = ++authRequestId.current
+        const nextProfile = await loadProfile(userId)
+        if (request === authRequestId.current) setProfile(nextProfile)
       },
     }),
     [session, profile, loading, loadProfile],

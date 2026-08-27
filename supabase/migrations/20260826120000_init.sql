@@ -107,47 +107,14 @@ returns boolean language sql stable security definer set search_path = public as
 $$;
 
 -- ---------------------------------------------------------------------------
--- 7. Signup trigger — turns an invite into a profile with the right role
---    * matching pending invite  -> role from the invite, invite marked accepted
---    * NO invite, and no users exist yet -> first account bootstraps as admin
---    * NO invite, users already exist     -> signup is rejected
+-- 7. Signup trigger
+--    This migration intentionally fails closed. The following hardening
+--    migration installs the complete hashed invitation implementation.
 -- ---------------------------------------------------------------------------
 create or replace function public.handle_new_user()
 returns trigger language plpgsql security definer set search_path = public as $$
-declare
-  v_invite public.invites%rowtype;
-  v_count  int;
 begin
-  select * into v_invite
-  from public.invites
-  where lower(email) = lower(new.email) and accepted_at is null
-  order by created_at desc limit 1;
-
-  if found then
-    insert into public.profiles (id, email, full_name, role)
-    values (
-      new.id,
-      new.email,
-      coalesce(new.raw_user_meta_data ->> 'full_name', v_invite.full_name),
-      v_invite.role
-    );
-
-    update public.invites
-       set accepted_at = now(), accepted_by = new.id
-     where id = v_invite.id;
-
-    return new;
-  end if;
-
-  select count(*) into v_count from public.profiles;
-  if v_count = 0 then
-    -- Bootstrap: the very first account becomes the admin.
-    insert into public.profiles (id, email, full_name, role)
-    values (new.id, new.email, new.raw_user_meta_data ->> 'full_name', 'admin');
-    return new;
-  end if;
-
-  raise exception 'No pending invitation exists for this email address.';
+  raise exception 'Staff signup is unavailable until all database migrations are applied.';
 end $$;
 
 drop trigger if exists on_auth_user_created on auth.users;
@@ -206,10 +173,8 @@ drop policy if exists submissions_staff_read    on public.submissions;
 drop policy if exists submissions_staff_update  on public.submissions;
 drop policy if exists submissions_admin_delete  on public.submissions;
 
--- Anonymous visitors may CREATE a submission (that is the public form) but may
--- never read one back. Reading requires an active staff profile.
-create policy submissions_public_insert on public.submissions
-  for insert to anon, authenticated with check (true);
+-- Public submissions are accepted by the submit-public Edge Function. Do not
+-- recreate the legacy direct-write policy when this bootstrap file is replayed.
 
 create policy submissions_staff_read on public.submissions
   for select using (public.is_staff());

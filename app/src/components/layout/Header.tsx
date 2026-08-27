@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion, useScroll, useSpring } from 'framer-motion'
 import { Mail, Menu, Phone, X } from 'lucide-react'
@@ -6,6 +6,7 @@ import { navLinks, site } from '@/data/site'
 import { cn } from '@/lib/utils'
 import { Button, ArrowIcon } from '@/components/ui/Button'
 import { Logo } from './Logo'
+import { useModalDialog } from '@/hooks/useModalDialog'
 
 /** Thin accent progress bar at the very top, spec §11.3. */
 function ScrollProgress() {
@@ -32,12 +33,8 @@ export function Header() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  // Close the drawer on navigation, and lock body scroll while it is open.
+  // Close the drawer on navigation.
   useEffect(() => setOpen(false), [pathname])
-  useEffect(() => {
-    document.body.style.overflow = open ? 'hidden' : ''
-    return () => { document.body.style.overflow = '' }
-  }, [open])
 
   return (
     <>
@@ -51,6 +48,7 @@ export function Header() {
       </a>
 
       <header
+        data-modal-background
         className={cn(
           'fixed inset-x-0 top-0 z-[60] glass transition-all duration-300 [transition-timing-function:var(--ease-premium)]',
           scrolled
@@ -110,6 +108,7 @@ export function Header() {
             onClick={() => setOpen(true)}
             aria-label="Open menu"
             aria-expanded={open}
+            aria-controls="public-mobile-menu"
             className="lg:hidden grid place-items-center size-11 -mr-2 rounded-full text-[color:var(--color-primary)] transition-colors hover:bg-[color:var(--color-bg-soft)]"
           >
             <Menu size={22} />
@@ -123,24 +122,26 @@ export function Header() {
 }
 
 function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [onClose])
+  const dialogRef = useRef<HTMLElement>(null)
+  const closeRef = useRef<HTMLButtonElement>(null)
+  useModalDialog(open, onClose, dialogRef, closeRef)
 
   return (
     <AnimatePresence>
       {open && (
         <>
           <motion.div
+            aria-hidden="true"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
             onClick={onClose}
             className="fixed inset-0 z-[80] bg-[color:var(--color-primary-dark)]/45 backdrop-blur-[2px] lg:hidden"
           />
           <motion.aside
+            ref={dialogRef}
+            id="public-mobile-menu"
             role="dialog" aria-modal="true" aria-label="Navigation menu"
+            tabIndex={-1}
             initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
             transition={{ duration: 0.38, ease: [0.23, 1, 0.32, 1] }}
             className="fixed right-0 top-0 z-[85] flex h-dvh w-[min(21rem,88vw)] flex-col bg-white shadow-[-16px_0_48px_-20px_rgba(15,42,61,0.45)] lg:hidden"
@@ -148,6 +149,7 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
             <div className="flex items-center justify-between px-6 py-5 border-b border-[color:var(--color-line)]">
               <Logo />
               <button
+                ref={closeRef}
                 onClick={onClose} aria-label="Close menu"
                 className="grid place-items-center size-10 rounded-full text-[color:var(--color-ink-secondary)] transition-colors hover:bg-[color:var(--color-bg-soft)]"
               >

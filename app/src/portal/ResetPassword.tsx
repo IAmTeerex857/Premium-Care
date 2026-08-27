@@ -13,7 +13,10 @@ import { useSeo } from '@/hooks/useSeo'
 
 const schema = z
   .object({
-    password: z.string().min(8, 'Use at least 8 characters.'),
+    password: z.string()
+      .min(8, 'Use at least 8 characters.')
+      .regex(/[A-Za-z]/, 'Include at least one letter.')
+      .regex(/\d/, 'Include at least one number.'),
     confirm: z.string(),
   })
   .refine((v) => v.password === v.confirm, { message: 'Passwords do not match.', path: ['confirm'] })
@@ -29,7 +32,7 @@ type FormValues = z.infer<typeof schema>
  * could change anything, which is what made recovery useless before.
  */
 export default function ResetPassword() {
-  useSeo({ title: 'Set a New Password, Premium Care' })
+  useSeo({ title: 'Set a New Password, Premium Care', noindex: true })
 
   const { updatePassword, signOut } = useAuth()
   const navigate = useNavigate()
@@ -81,7 +84,7 @@ export default function ResetPassword() {
         <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-5">
           {error && <Notice tone="warn">{error}</Notice>}
           <Input label="New password" type="password" autoComplete="new-password" required
-                 hint="At least 8 characters" error={errors.password?.message} {...register('password')} />
+                   hint="At least 8 characters, including a letter and number" error={errors.password?.message} {...register('password')} />
           <Input label="Confirm new password" type="password" autoComplete="new-password" required
                  error={errors.confirm?.message} {...register('confirm')} />
           <Button type="submit" size="lg" full disabled={state === 'loading'}>

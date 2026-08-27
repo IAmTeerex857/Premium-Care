@@ -45,7 +45,7 @@ export function PortalShell({ title, subtitle, children, footer }: {
 }
 
 export default function Login() {
-  useSeo({ title: 'Staff Sign In, Premium Care' })
+  useSeo({ title: 'Staff Sign In, Premium Care', noindex: true })
 
   const { signIn, session, resetPassword } = useAuth()
   const navigate = useNavigate()
@@ -105,7 +105,9 @@ export default function Login() {
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-5">
         {!isSupabaseConfigured && (
           <Notice tone="warn">
-            Supabase is not connected. Add your project URL and anon key to <code>app/.env.local</code>, then restart the dev server.
+            {import.meta.env.DEV
+              ? <>Supabase is not connected. Add your project URL and anon key to <code>app/.env.local</code>, then restart the dev server.</>
+              : 'The staff portal is temporarily unavailable.'}
           </Notice>
         )}
         {error && <Notice tone="warn">{error}</Notice>}

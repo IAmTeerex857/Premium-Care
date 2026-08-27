@@ -1,198 +1,138 @@
 # Premium Care
 
-A premium health & care website with a role-based employee portal, built from
-[`design-specification.md`](./design-specification.md).
+Premium Care's public website and staff portal. The application is a React 19,
+TypeScript, and Vite SPA backed by Supabase Auth, Postgres, Storage, and Edge
+Functions.
 
-- **Public site** — 8 pages (Home, About, Services, Insurance, Careers, Blog, Contact, Referral)
-  plus service detail, blog post, and legal pages.
-- **Staff portal** — `/portal`, with submission inboxes, a stats dashboard, and
-  admin-only team management.
+## Features
 
----
+- Public pages for home, about, services, careers, contact, privacy, and terms
+- Eight service-detail pages
+- Booking, contact, newsletter, and job-application forms
+- Staff submission inboxes and dashboard
+- Admin-only team, role, and invitation management
 
-## Stack
+## Requirements
 
-| Layer | Choice |
-|---|---|
-| Framework | React 19 + Vite 8 (SPA) |
-| Language | TypeScript (strict) |
-| Routing | react-router-dom v7 |
-| Styling | Tailwind CSS v4 (CSS-first `@theme` tokens) |
-| Animation | Framer Motion |
-| Forms | React Hook Form + Zod |
-| Backend | Supabase (Postgres + Auth + RLS + Realtime) |
-| Icons | lucide-react |
+- Node.js 24 (see `.nvmrc`)
+- npm 11
+- A Supabase project and the Supabase CLI for database or function changes
 
----
+## Local setup
 
-## Setup
-
-### 1. Install
+From the repository root:
 
 ```bash
 cd app
-npm install
-```
-
-### 2. Apply the database schema
-
-Open your Supabase project → **SQL Editor** → **New query**, paste the entire
-contents of [`supabase/schema.sql`](./supabase/schema.sql), and run it.
-
-It is idempotent — safe to run again after edits.
-
-This creates:
-
-| Object | Purpose |
-|---|---|
-| `profiles` | One row per auth user, holds `role` (`admin` \| `member`) and `is_active` |
-| `invites` | Pending invitations created by admins |
-| `submissions` | Every public form submission (`booking`, `contact`, `referral`, `application`, `newsletter`) |
-| `submission_notes` | Internal staff notes on a submission |
-| `handle_new_user()` | Signup trigger — grants the invited role, or bootstraps the first account as admin |
-| RLS policies | Anonymous visitors may **insert** submissions but never read them; reading requires an active staff profile |
-
-### 3. Add your keys
-
-```bash
-cd app
+npm ci
 cp .env.example .env.local
 ```
 
-Fill in from **Supabase → Project Settings → API**:
+Set the browser-safe project values in `app/.env.local`:
 
-```
+```dotenv
 VITE_SUPABASE_URL=https://your-project-ref.supabase.co
-VITE_SUPABASE_ANON_KEY=your-anon-public-key
+VITE_SUPABASE_ANON_KEY=your-anon-key
 ```
 
-> **Never** put the `service_role` key here. Anything prefixed `VITE_` is bundled
-> into browser JavaScript and readable by every visitor.
+Never expose the Supabase `service_role` key through a `VITE_` variable. Vite
+embeds those values in client JavaScript.
 
-### 4. Run
+Apply the migrations to a linked Supabase project from `app/`:
+
+```bash
+npm run db:link
+npm run db:push
+```
+
+Read [`supabase/README.md`](./supabase/README.md) before the first push. Edge
+Function secrets and matching Vault values must be configured before applying
+the maintenance migration.
+
+Start Vite:
 
 ```bash
 npm run dev
 ```
 
-Without `.env.local`, the site still runs in **demo mode**: forms save to
-`localStorage` and the portal shows a "not connected" screen.
+Without the two Supabase variables, public forms use local storage only during
+Vite development and the portal remains unavailable. A production build with
+missing variables does not silently retain submissions.
 
----
+## First administrator
 
-## Creating the first admin
+There is no public first-user bootstrap. After all migrations are applied, use
+the SQL Editor to create a one-time, seven-day admin invitation, then register
+at `/portal/join` with the exact email address and plaintext code. The complete
+procedure is in [`supabase/README.md`](./supabase/README.md).
 
-The signup trigger bootstraps the **very first account** as an admin.
-
-1. Go to `/portal/join`
-2. Sign up with your own email and a password
-3. You land in the portal as **Administrator**
-
-Every later account requires an invitation, so the bootstrap can only happen once.
-
-> If your project has **Confirm email** enabled (Authentication → Providers → Email),
-> click the confirmation link before signing in. Turning it off makes local testing faster.
-
-## Adding members
-
-`Portal → Team → Invite a member`:
-
-1. Enter their email and pick **Member** or **Admin**
-2. Send them the join link (`/portal/join`)
-3. They sign up **with that exact email address**, and the database trigger grants
-   the role you chose
-
-Signup with an un-invited email is rejected at the database level.
-
-### Why invitations instead of direct account creation
-
-Creating a user account outright requires Supabase's `service_role` key, which
-cannot ship in a browser app — any visitor could read it from the bundle and take
-over the database. The invite flow achieves the same outcome using only the anon
-key, with the role decision enforced in Postgres rather than in client JavaScript.
-
-If you later want an admin to set a member's password directly, deploy a Supabase
-Edge Function holding the `service_role` key server-side and call that instead.
-
----
-
-## Roles
-
-| Capability | Member | Admin |
-|---|:---:|:---:|
-| View all submission inboxes | ✅ | ✅ |
-| Change status / assign submissions | ✅ | ✅ |
-| Add internal notes | ✅ | ✅ |
-| Delete a submission | ❌ | ✅ |
-| Invite & revoke members | ❌ | ✅ |
-| Change roles, deactivate accounts | ❌ | ✅ |
-
-Enforced twice: hidden in the UI, and blocked by RLS policies in Postgres.
-
----
-
-## Where to change things
-
-| What | File |
-|---|---|
-| Phone, email, address, hours, nav | `app/src/data/site.ts` |
-| All photography (Unsplash URLs) | `app/src/data/images.ts` |
-| Services | `app/src/data/services.ts` |
-| Values, team, FAQs, coverage, jobs | `app/src/data/content.ts` |
-| Blog posts | `app/src/data/blog.ts` |
-| Colors, type scale, motion tokens | `app/src/index.css` (`@theme` block) |
-
-Photography is centralized: swap the URLs in `images.ts` when real photos are ready
-and nothing else changes.
-
----
+Later invitations are created under **Portal > Team**. The generated code is
+shown only once, expires after seven days, and must be sent with the
+`/portal/join` URL. Creating an invitation does not send an email.
 
 ## Scripts
 
-```bash
-npm run dev       # dev server
-npm run build     # typecheck + production build to dist/
-npm run preview   # serve the production build
-```
+Run these commands from `app/`:
 
-## Deploying
+| Command | Purpose |
+|---|---|
+| `npm run dev` | Start the Vite development server |
+| `npm run build` | Type-check and build production files in `app/dist/` |
+| `npm run preview` | Serve the production build locally |
+| `npm run lint` | Run Oxlint and fail on warnings |
+| `npm run typecheck` | Run TypeScript without emitting files |
+| `npm test` | Run the Vitest suite once |
+| `npm run test:watch` | Run Vitest in watch mode |
+| `npm run check` | Run lint, type-checking, and tests |
+| `npm run sb -- <args>` | Run the Supabase CLI against the repository root |
+| `npm run db:link` | Link the local Supabase directory to a project |
+| `npm run db:push` | Apply pending migrations to the linked project |
+| `npm run db:pull` | Pull remote schema changes into a migration |
+| `npm run db:diff` | Diff the local database schema |
+| `npm run db:status` | List accessible Supabase projects |
 
-`vercel.json` and `public/_redirects` are included, so SPA deep links work on
-Vercel and Netlify. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` as
-environment variables in your host, and add your deployed origin to
-**Supabase → Authentication → URL Configuration → Redirect URLs** so password
-resets return to the right place.
+## Deployment
 
----
+Do not deploy the repository root as the frontend. On Vercel, import the
+repository and set **Root Directory** to `app`; Vercel will then use
+`app/vercel.json`, run the Vite build, and serve `app/dist`. Set
+`VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` for every required Vercel
+environment.
 
-## Responsive verification
+For another static host, use `app` as the base directory, `npm run build` as the
+build command, and `dist` as the publish directory. The host must rewrite
+unknown routes to `/index.html`; `app/public/_redirects` provides this rule for
+hosts that support Netlify-style redirects.
 
-Checked with headless Chromium across **15 routes × 8 viewports** (320px through
-1440px). Current state: **zero horizontal overflow, zero console errors**, and all
-interactive controls meet the WCAG 2.5.8 24×24px target size.
+For authentication links and password recovery, add the production URL and
+required local URLs in **Supabase > Authentication > URL Configuration**. The
+production site is `https://premiumcareinc.com`.
 
-Re-run it any time the layout changes:
+In the hosted Auth settings, require email confirmation, a minimum eight-character
+password containing letters and numbers, secure password changes, and production
+SMTP before inviting additional staff. `supabase/config.toml` contains matching
+local defaults, but database migrations do not alter hosted Auth settings.
 
-```bash
-npm run build && npm run preview -- --port 4173
-# then run the audit script against http://localhost:4173
-```
+The database and the `submit-public`, `notify-submission`, and
+`process-maintenance` Edge Functions are separate deployments; deploying the
+Vite application does not apply migrations or deploy functions.
 
-## Known gaps
+## Project content
 
-- **Legal pages are drafts, not filed documents.** Both are substantive and
-  structured for a US home-care agency, but they must be reviewed and adapted by
-  counsel — HIPAA, state privacy statutes, and home-care licensing rules vary by
-  jurisdiction. Each page carries a visible "Draft for review" banner; delete that
-  banner in `src/pages/Legal.tsx` once real copy is in.
-- **A HIPAA Notice of Privacy Practices is still needed.** The Privacy Policy
-  references it as a separate document given to clients at intake, which is the
-  correct structure — but that document does not exist yet.
-- **Invitations are not emailed.** The portal creates the invite and gives you a
-  join link to pass along; wiring an email provider is a separate step.
-- **No SSR.** This is a client-rendered SPA per the chosen stack; `useSeo` sets
-  per-route title, description, and canonical tags, but crawlers that do not execute
-  JavaScript will see only the shell. Prerendering or a move to Next.js would fix it.
-- **Photography is placeholder.** All Unsplash hotlinks, centralized in
-  `src/data/images.ts` — verified loading, but they are stock and should be replaced
-  with real photography of your team and clients (with consent).
+| Content | File |
+|---|---|
+| Business details and navigation | `app/src/data/site.ts` |
+| Photography URLs | `app/src/data/images.ts` |
+| Services | `app/src/data/services.ts` |
+| Values, FAQs, coverage, and jobs | `app/src/data/content.ts` |
+| Design tokens and global styles | `app/src/index.css` |
+
+## Known limitations
+
+- Legal pages are drafts and require qualified legal review.
+- A separate HIPAA Notice of Privacy Practices is not included.
+- Staff invitation codes must be delivered manually.
+- The public site is client-rendered. Per-route metadata is updated at runtime,
+  but crawlers without JavaScript receive the base HTML metadata.
+- Site photography uses third-party Unsplash images and should be replaced with
+  approved first-party photography where possible.

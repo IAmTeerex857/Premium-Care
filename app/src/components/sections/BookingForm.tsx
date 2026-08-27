@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
 import { motion } from 'framer-motion'
 import { CalendarCheck, Check } from 'lucide-react'
 import { services } from '@/data/services'
@@ -10,32 +9,18 @@ import { isSupabaseConfigured } from '@/lib/supabase'
 import { Input, Select, Textarea } from '@/components/ui/Field'
 import { Button, ArrowIcon } from '@/components/ui/Button'
 import { Notice, SubmitStatus, type SubmitState } from '@/components/ui/Misc'
-
-const schema = z.object({
-  name: z.string().trim().min(2, 'Please enter your full name.'),
-  email: z.string().trim().email('Enter a valid email address.'),
-  phone: z.string().trim().min(10, 'Enter a valid phone number.'),
-  service: z.string().min(1, 'Choose the service you need.'),
-  date: z.string().min(1, 'Choose a preferred date.'),
-  time: z.string().min(1, 'Choose a preferred time.'),
-  relationship: z.string().min(1, 'Tell us who care is for.'),
-  message: z.string().trim().max(2000).optional(),
-})
-
-type FormValues = z.infer<typeof schema>
-
-const today = new Date().toISOString().split('T')[0]
+import { bookingSchema, localDateValue, type BookingFormValues } from '@/lib/booking'
 
 export function BookingForm({ compact = false }: { compact?: boolean }) {
   const [state, setState] = useState<SubmitState>('idle')
   const [serverError, setServerError] = useState<string | null>(null)
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<FormValues>({
-    resolver: zodResolver(schema),
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<BookingFormValues>({
+    resolver: zodResolver(bookingSchema),
     defaultValues: { relationship: '' },
   })
 
-  async function onSubmit(values: FormValues) {
+  async function onSubmit(values: BookingFormValues) {
     setServerError(null)
     setState('loading')
     try {
@@ -45,7 +30,7 @@ export function BookingForm({ compact = false }: { compact?: boolean }) {
         email: values.email,
         phone: values.phone,
         subject: `Appointment request, ${values.service}`,
-        message: values.message || null as unknown as string,
+        message: values.message || undefined,
         payload: {
           service: values.service,
           preferred_date: values.date,
@@ -89,7 +74,7 @@ export function BookingForm({ compact = false }: { compact?: boolean }) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-5">
-      {!isSupabaseConfigured && (
+      {import.meta.env.DEV && !isSupabaseConfigured && (
         <Notice tone="warn">
           Demo mode: Supabase is not connected, so this request will be stored locally in your browser
           instead of reaching the staff portal.
@@ -115,7 +100,7 @@ export function BookingForm({ compact = false }: { compact?: boolean }) {
           {services.map((s) => <option key={s.slug} value={s.title}>{s.title}</option>)}
           <option value="Not sure yet">I am not sure yet</option>
         </Select>
-        <Input label="Preferred date" type="date" min={today} required error={errors.date?.message} {...register('date')} />
+        <Input label="Preferred date" type="date" min={localDateValue()} required error={errors.date?.message} {...register('date')} />
         <Select label="Preferred time" required error={errors.time?.message} {...register('time')}>
           <option value="">Select a time…</option>
           <option value="Morning (8am - 12pm)">Morning (8am - 12pm)</option>
@@ -138,7 +123,7 @@ export function BookingForm({ compact = false }: { compact?: boolean }) {
       </Button>
 
       <p className="text-center text-[0.8125rem] text-[color:var(--color-ink-muted)]">
-        No obligation. We never share your information with third parties.
+        No obligation. We never sell your information or share it for third-party marketing.
       </p>
     </form>
   )

@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Inbox as InboxIcon, Search } from 'lucide-react'
-import { fetchSubmissions, subscribeToSubmissions } from '@/lib/api'
+import { fetchSubmissionCounts, fetchSubmissions, subscribeToSubmissions } from '@/lib/api'
 import type { Submission, SubmissionKind, SubmissionStatus } from '@/lib/types'
 import { STATUS_LABEL } from '@/lib/types'
 import { cn } from '@/lib/utils'
@@ -9,7 +9,9 @@ import { EmptyState, ErrorState, KindBadge, Panel, PortalHeading, RowSkeleton, r
 import { SubmissionDetail } from './SubmissionDetail'
 import { useSeo } from '@/hooks/useSeo'
 
-const config: Record<SubmissionKind, { title: string; subtitle: string; empty: string }> = {
+type InboxKind = Exclude<SubmissionKind, 'referral' | 'newsletter'>
+
+const config: Record<InboxKind, { title: string; subtitle: string; empty: string }> = {
   booking: {
     title: 'Appointment requests',
     subtitle: 'Consultation and assessment requests from the website booking forms.',
@@ -20,71 +22,100 @@ const config: Record<SubmissionKind, { title: string; subtitle: string; empty: s
     subtitle: 'General enquiries from the contact form and newsletter signups.',
     empty: 'Messages sent through the contact form will appear here.',
   },
-  referral: {
-    title: 'Referrals',
-    subtitle: 'Client referrals from discharge planners, social workers, and partners.',
-    empty: 'Referrals submitted by professional partners will appear here.',
-  },
   application: {
     title: 'Job applications',
     subtitle: 'Applications submitted through the careers page.',
     empty: 'Applications from the careers page will appear here.',
-  },
-  newsletter: {
-    title: 'Newsletter signups',
-    subtitle: 'Email addresses collected from the footer signup form.',
-    empty: 'Newsletter signups will appear here.',
   },
 }
 
 const statusFilters: Array<SubmissionStatus | 'all'> = ['all', 'new', 'in_progress', 'closed']
 const PAGE_SIZE = 50
 
-export function Inbox({ kind }: { kind: SubmissionKind }) {
+export function Inbox({ kind }: { kind: InboxKind }) {
   const meta = config[kind]
-  useSeo({ title: `${meta.title}, Premium Care Portal` })
+  useSeo({ title: `${meta.title}, Premium Care Portal`, noindex: true })
 
   const { id } = useParams()
   const [rows, setRows] = useState<Submission[]>([])
   const [total, setTotal] = useState(0)
+  const [counts, setCounts] = useState<Record<SubmissionStatus, number> | null>(null)
   const [pageIndex, setPageIndex] = useState(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [status, setStatus] = useState<SubmissionStatus | 'all'>('all')
   const [search, setSearch] = useState('')
+  const [debouncedSearch, setDebouncedSearch] = useState('')
+  const requestId = useRef(0)
+
+  const kinds = useMemo<SubmissionKind[]>(
+    () => kind === 'contact' ? ['contact', 'newsletter', 'referral'] : [kind],
+    [kind],
+  )
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setPageIndex(0)
+      setDebouncedSearch(search.trim())
+    }, 300)
+    return () => window.clearTimeout(timer)
+  }, [search])
+
+  useEffect(() => {
+    setPageIndex(0)
+    setStatus('all')
+    setSearch('')
+    setDebouncedSearch('')
+  }, [kind])
 
   const load = useCallback(async () => {
+    const request = ++requestId.current
     setError(null)
     try {
-      // The contact inbox also surfaces newsletter signups, so it asks for
-      // both kinds rather than filtering a truncated page client-side.
-      const kinds: SubmissionKind[] = kind === 'contact' ? ['contact', 'newsletter'] : [kind]
-      const page = await fetchSubmissions({ kind: kinds, pageSize: PAGE_SIZE, page: pageIndex })
+      const [page, aggregateCounts] = await Promise.all([
+        fetchSubmissions({
+          kind: kinds,
+          status,
+          search: debouncedSearch,
+          pageSize: PAGE_SIZE,
+          page: pageIndex,
+        }),
+        fetchSubmissionCounts().catch(() => null),
+      ])
+      if (request !== requestId.current) return
+
+      if (aggregateCounts) {
+        const nextCounts = { new: 0, in_progress: 0, closed: 0 }
+        for (const count of aggregateCounts) {
+          if (kinds.includes(count.kind)) nextCounts[count.status] += Number(count.count)
+        }
+        setCounts(nextCounts)
+      }
+      const lastPage = Math.max(0, Math.ceil(page.total / PAGE_SIZE) - 1)
+      if (pageIndex > lastPage) {
+        setTotal(page.total)
+        setPageIndex(lastPage)
+        return
+      }
       setRows(page.rows)
       setTotal(page.total)
     } catch (err) {
+      if (request !== requestId.current) return
       setError(err instanceof Error ? err.message : 'Failed to load submissions.')
     } finally {
-      setLoading(false)
+      if (request === requestId.current) setLoading(false)
     }
-  }, [kind, pageIndex])
+  }, [debouncedSearch, kinds, pageIndex, status])
 
   useEffect(() => {
     setLoading(true)
     void load()
-    return subscribeToSubmissions(() => void load())
+    const unsubscribe = subscribeToSubmissions(() => void load())
+    return () => {
+      requestId.current += 1
+      unsubscribe()
+    }
   }, [load])
-
-  const filtered = useMemo(() => {
-    const q = search.trim().toLowerCase()
-    return rows.filter((r) => {
-      if (status !== 'all' && r.status !== status) return false
-      if (!q) return true
-      return [r.name, r.email, r.phone, r.subject, r.message]
-        .filter(Boolean)
-        .some((v) => v!.toLowerCase().includes(q))
-    })
-  }, [rows, status, search])
 
   // Detail view for a single submission.
   if (id) return <SubmissionDetail id={id} kind={kind} onChanged={() => void load()} />
@@ -111,11 +142,11 @@ export function Inbox({ kind }: { kind: SubmissionKind }) {
 
       <div className="mb-5 flex flex-wrap gap-2">
         {statusFilters.map((s) => {
-          const count = s === 'all' ? rows.length : rows.filter((r) => r.status === s).length
+          const count = counts && (s === 'all' ? counts.new + counts.in_progress + counts.closed : counts[s])
           return (
             <button
               key={s}
-              onClick={() => setStatus(s)}
+              onClick={() => { setPageIndex(0); setStatus(s) }}
               aria-pressed={status === s}
               className={cn(
                 'inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[0.8125rem] font-semibold transition-all duration-200 active:scale-[0.97]',
@@ -125,28 +156,36 @@ export function Inbox({ kind }: { kind: SubmissionKind }) {
               )}
             >
               {s === 'all' ? 'All' : STATUS_LABEL[s]}
-              <span className={cn('rounded-full px-1.5 text-[0.6875rem]', status === s ? 'bg-white/20' : 'bg-[color:var(--color-bg-soft)]')}>
-                {count}
-              </span>
+              {count !== null && (
+                <span className={cn('rounded-full px-1.5 text-[0.6875rem]', status === s ? 'bg-white/20' : 'bg-[color:var(--color-bg-soft)]')}>
+                  {count}
+                </span>
+              )}
             </button>
           )
         })}
       </div>
+
+      {(debouncedSearch || status !== 'all') && !loading && !error && (
+        <p className="-mt-2 mb-4 text-[0.8125rem] text-[color:var(--color-ink-muted)]">
+          {total} matching submission{total === 1 ? '' : 's'}
+        </p>
+      )}
 
       <Panel>
         {error ? (
           <ErrorState message={error} onRetry={() => void load()} />
         ) : loading ? (
           <RowSkeleton rows={6} />
-        ) : filtered.length === 0 ? (
+        ) : rows.length === 0 ? (
           <EmptyState
             icon={InboxIcon}
-            title={rows.length === 0 ? 'Nothing here yet' : 'No matching submissions'}
-            body={rows.length === 0 ? meta.empty : 'Try a different search term or status filter.'}
+            title={status === 'all' && !debouncedSearch ? 'Nothing here yet' : 'No matching submissions'}
+            body={status === 'all' && !debouncedSearch ? meta.empty : 'Try a different search term or status filter.'}
           />
         ) : (
           <ul className="divide-y divide-[color:var(--color-line)]">
-            {filtered.map((r) => (
+            {rows.map((r) => (
               <li key={r.id}>
                 <Link
                   to={`${routeFor(kind)}/${r.id}`}

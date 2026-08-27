@@ -9,7 +9,7 @@
  * Staff read the actual content inside the portal, behind authentication and
  * row level security. The email is a doorbell, not a filing cabinet.
  *
- * Triggered by a Postgres trigger on INSERT into public.submissions.
+ * Called by submit-public and by the service-only retry worker.
  *
  * Secrets: RESEND_API_KEY, NOTIFY_TO, NOTIFY_FROM, WEBHOOK_SECRET
  */
@@ -25,7 +25,7 @@ type Kind = 'booking' | 'contact' | 'referral' | 'application' | 'newsletter'
 const META: Record<Kind, { label: string; sentence: string; route: string; emoji: string }> = {
   booking:     { label: 'Appointment request', sentence: 'Someone has requested an appointment.',        route: '/portal/bookings',     emoji: '📅' },
   contact:     { label: 'Contact message',     sentence: 'Someone has sent a message through the site.', route: '/portal/contacts',     emoji: '✉️' },
-  referral:    { label: 'Client referral',     sentence: 'A partner has submitted a client referral.',   route: '/portal/referrals',    emoji: '🤝' },
+  referral:    { label: 'Client referral',     sentence: 'A partner has submitted a client referral.',   route: '/portal/contacts',     emoji: '🤝' },
   application: { label: 'Career application',  sentence: 'Someone has applied to join the team.',        route: '/portal/applications', emoji: '📋' },
   newsletter:  { label: 'Newsletter signup',   sentence: 'Someone has subscribed to the newsletter.',    route: '/portal/contacts',     emoji: '🔔' },
 }
@@ -162,10 +162,11 @@ async function recordFailure(
   record: { id?: string; kind?: string },
   status: number,
   detail: string,
+  resolved = false,
 ) {
-  if (!SUPABASE_URL || !SERVICE_KEY) return
+  if (!SUPABASE_URL || !SERVICE_KEY) return false
   try {
-    await fetch(`${SUPABASE_URL}/rest/v1/notification_failures`, {
+    const result = await fetch(`${SUPABASE_URL}/rest/v1/notification_failures`, {
       method: 'POST',
       headers: {
         apikey: SERVICE_KEY,
@@ -178,10 +179,13 @@ async function recordFailure(
         kind: record.kind ?? null,
         status_code: status,
         detail: detail.slice(0, 2000),
+        resolved_at: resolved ? new Date().toISOString() : null,
       }),
     })
+    return result.ok
   } catch (e) {
     console.error('Could not record notification failure', e)
+    return false
   }
 }
 
@@ -202,9 +206,11 @@ Deno.serve(async (req) => {
   }
 
   let record: { id?: string; kind?: Kind; created_at?: string }
+  let failureId: number | null = null
   try {
     const body = await req.json()
     record = body.record ?? body
+    failureId = Number.isInteger(body.failure_id) ? body.failure_id : null
   } catch {
     return new Response('Bad payload', { status: 400 })
   }
@@ -212,11 +218,21 @@ Deno.serve(async (req) => {
 
   const { subject, html, text } = buildEmail(record.kind, record.created_at ?? new Date().toISOString())
 
-  const res = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ from: NOTIFY_FROM, to: [NOTIFY_TO], subject, html, text }),
-  })
+  let res: Response
+  try {
+    res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ from: NOTIFY_FROM, to: [NOTIFY_TO], subject, html, text }),
+    })
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : 'Email provider request failed.'
+    const recorded = failureId === null ? await recordFailure(record, 0, detail) : false
+    return new Response(JSON.stringify({ ok: false, status: 0, transient: true, detail, recorded }), {
+      status: 503,
+      headers: { 'Content-Type': 'application/json' },
+    })
+  }
 
   if (!res.ok) {
     const detail = await res.text()
@@ -226,9 +242,13 @@ Deno.serve(async (req) => {
 
     // Record every failure so an admin can see what was never delivered,
     // rather than silently dropping it as before.
-    await recordFailure(record, res.status, detail)
+    const recorded = failureId === null
+      ? await recordFailure(record, res.status, detail, !transient)
+      : false
 
-    return new Response(JSON.stringify({ ok: false, status: res.status, transient, detail }), {
+    return new Response(JSON.stringify({
+      ok: false, status: res.status, transient, detail, recorded,
+    }), {
       // 5xx tells pg_net's log this was a real failure worth investigating.
       status: transient ? 503 : 200,
       headers: { 'Content-Type': 'application/json' },

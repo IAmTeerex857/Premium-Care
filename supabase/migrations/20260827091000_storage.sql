@@ -1,6 +1,6 @@
 -- ============================================================================
 -- Premium Care, resume storage
--- Private bucket: applicants may write, only active staff may read.
+-- Private bucket: the submission service may write, only active staff may read.
 -- Idempotent.
 -- ============================================================================
 
@@ -16,11 +16,9 @@ on conflict (id) do update
       file_size_limit    = excluded.file_size_limit,
       allowed_mime_types = excluded.allowed_mime_types;
 
--- Applicants upload but can never list or read the bucket back.
+-- Uploads are performed only by submit-public after byte-level validation.
+-- Keep the drop here so replaying this migration cannot restore direct writes.
 drop policy if exists resumes_anon_upload on storage.objects;
-create policy resumes_anon_upload on storage.objects
-  for insert to anon, authenticated
-  with check (bucket_id = 'resumes');
 
 drop policy if exists resumes_staff_read on storage.objects;
 create policy resumes_staff_read on storage.objects

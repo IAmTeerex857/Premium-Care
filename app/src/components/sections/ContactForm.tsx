@@ -62,7 +62,7 @@ export function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-5">
-      {!isSupabaseConfigured && (
+      {import.meta.env.DEV && !isSupabaseConfigured && (
         <Notice tone="warn">Demo mode: Supabase is not connected, so this message is stored locally in your browser.</Notice>
       )}
       {serverError && <Notice tone="warn">{serverError}</Notice>}

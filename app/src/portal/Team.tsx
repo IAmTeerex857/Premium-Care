@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -24,31 +24,38 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>
 
 export default function Team() {
-  useSeo({ title: 'Team, Premium Care Portal' })
+  useSeo({ title: 'Team, Premium Care Portal', noindex: true })
 
   const { profile } = useAuth()
   const [profiles, setProfiles] = useState<Profile[]>([])
   const [invites, setInvites] = useState<Invite[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [toast, setToast] = useState<string | null>(null)
+  const [toast, setToast] = useState<{ message: string; tone: 'success' | 'error' } | null>(null)
   const [showForm, setShowForm] = useState(false)
   // Shown exactly once: only the hash is stored, so it cannot be recovered.
   const [issued, setIssued] = useState<{ email: string; code: string } | null>(null)
+  const requestId = useRef(0)
 
   const load = useCallback(async () => {
+    const request = ++requestId.current
     setError(null)
     try {
       const [p, i] = await Promise.all([fetchProfiles(), fetchInvites()])
+      if (request !== requestId.current) return
       setProfiles(p); setInvites(i)
     } catch (err) {
+      if (request !== requestId.current) return
       setError(err instanceof Error ? err.message : 'Failed to load the team.')
     } finally {
-      setLoading(false)
+      if (request === requestId.current) setLoading(false)
     }
   }, [])
 
-  useEffect(() => { void load() }, [load])
+  useEffect(() => {
+    void load()
+    return () => { requestId.current += 1 }
+  }, [load])
 
   const pending = invites.filter((i) => !i.accepted_at)
 
@@ -56,9 +63,9 @@ export default function Team() {
     try {
       await setProfileRole(id, role)
       await load()
-      setToast(`Role updated to ${role}`)
+      setToast({ message: `Role updated to ${role}`, tone: 'success' })
     } catch (err) {
-      setToast(err instanceof Error ? err.message : 'Could not update the role.')
+      setToast({ message: err instanceof Error ? err.message : 'Could not update the role.', tone: 'error' })
     }
   }
 
@@ -66,9 +73,9 @@ export default function Team() {
     try {
       await setProfileActive(id, active)
       await load()
-      setToast(active ? 'Member reactivated' : 'Member deactivated')
+      setToast({ message: active ? 'Member reactivated' : 'Member deactivated', tone: 'success' })
     } catch (err) {
-      setToast(err instanceof Error ? err.message : 'Could not update the member.')
+      setToast({ message: err instanceof Error ? err.message : 'Could not update the member.', tone: 'error' })
     }
   }
 
@@ -77,9 +84,9 @@ export default function Team() {
     try {
       await revokeInvite(id)
       await load()
-      setToast('Invitation revoked')
+      setToast({ message: 'Invitation revoked', tone: 'success' })
     } catch (err) {
-      setToast(err instanceof Error ? err.message : 'Could not revoke the invitation.')
+      setToast({ message: err instanceof Error ? err.message : 'Could not revoke the invitation.', tone: 'error' })
     }
   }
 
@@ -271,7 +278,7 @@ export default function Team() {
         </div>
       )}
 
-      <Toast message={toast} onDismiss={() => setToast(null)} />
+      <Toast message={toast?.message ?? null} tone={toast?.tone} onDismiss={() => setToast(null)} />
     </>
   )
 }

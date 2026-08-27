@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   BarChart3, Briefcase, CalendarCheck, Inbox, Mail, TrendingUp, type LucideIcon,
@@ -19,16 +19,18 @@ const tiles: { kind: SubmissionKind; label: string; to: string; icon: LucideIcon
 ]
 
 export default function Dashboard() {
-  useSeo({ title: 'Dashboard, Premium Care Portal' })
+  useSeo({ title: 'Dashboard, Premium Care Portal', noindex: true })
 
-  const { profile } = useAuth()
+  const { profile, isAdmin } = useAuth()
   const [rows, setRows] = useState<Submission[]>([])
   const [counts, setCounts] = useState<Array<{ kind: SubmissionKind; status: SubmissionStatus; count: number }>>([])
   const [volume, setVolume] = useState<Array<{ day: string; count: number }>>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const requestId = useRef(0)
 
   const load = useCallback(async () => {
+    const request = ++requestId.current
     setError(null)
     try {
       // Counts and chart come from Postgres aggregates, so they stay correct
@@ -38,17 +40,23 @@ export default function Dashboard() {
         fetchSubmissionCounts(),
         fetchDailyVolume(14),
       ])
+      if (request !== requestId.current) return
       setRows(recent.rows); setCounts(c); setVolume(v)
     } catch (err) {
+      if (request !== requestId.current) return
       setError(err instanceof Error ? err.message : 'Failed to load submissions.')
     } finally {
-      setLoading(false)
+      if (request === requestId.current) setLoading(false)
     }
   }, [])
 
   useEffect(() => {
     void load()
-    return subscribeToSubmissions(() => void load())
+    const unsubscribe = subscribeToSubmissions(() => void load())
+    return () => {
+      requestId.current += 1
+      unsubscribe()
+    }
   }, [load])
 
   const summary = useMemo(() => {
@@ -56,7 +64,8 @@ export default function Dashboard() {
     for (const t of tiles) byKind[t.kind] = { total: 0, open: 0 }
     let openAll = 0
     for (const c of counts) {
-      const bucket = byKind[c.kind]
+      const displayKind = c.kind === 'referral' || c.kind === 'newsletter' ? 'contact' : c.kind
+      const bucket = byKind[displayKind]
       if (bucket) {
         bucket.total += c.count
         if (c.status !== 'closed') bucket.open += c.count
@@ -93,7 +102,7 @@ export default function Dashboard() {
         <>
           {/* Stat tiles */}
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {tiles.map((t) => {
+            {tiles.filter((t) => t.kind !== 'application' || isAdmin).map((t) => {
               const c = summary.byKind[t.kind]
               return (
                 <Link

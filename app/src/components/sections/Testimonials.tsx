@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
-import { ChevronLeft, ChevronRight, Quote } from 'lucide-react'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { ChevronLeft, ChevronRight, Pause, Play, Quote } from 'lucide-react'
 import { testimonials } from '@/data/content'
 import { cn } from '@/lib/utils'
 import { SectionHeading, StarRating } from '@/components/ui/Misc'
@@ -10,7 +10,12 @@ const EASE = [0.23, 1, 0.32, 1] as const
 export function Testimonials() {
   const [index, setIndex] = useState(0)
   const [dir, setDir] = useState(1)
-  const [paused, setPaused] = useState(false)
+  const [userPaused, setUserPaused] = useState(false)
+  const [hovered, setHovered] = useState(false)
+  const [focusWithin, setFocusWithin] = useState(false)
+  const [visible, setVisible] = useState(() => document.visibilityState !== 'hidden')
+  const reduceMotion = useReducedMotion()
+  const paused = userPaused || hovered || focusWithin || !visible || reduceMotion
 
   const go = useCallback((next: number, direction: number) => {
     setDir(direction)
@@ -23,13 +28,23 @@ export function Testimonials() {
     return () => clearInterval(t)
   }, [index, paused, go])
 
+  useEffect(() => {
+    const onVisibilityChange = () => setVisible(document.visibilityState !== 'hidden')
+    document.addEventListener('visibilitychange', onVisibilityChange)
+    return () => document.removeEventListener('visibilitychange', onVisibilityChange)
+  }, [])
+
   const t = testimonials[index]!
 
   return (
     <section
       className="section"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onFocusCapture={() => setFocusWithin(true)}
+      onBlurCapture={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) setFocusWithin(false)
+      }}
     >
       <div className="shell">
         <SectionHeading
@@ -49,10 +64,10 @@ export function Testimonials() {
               <motion.figure
                 key={index}
                 custom={dir}
-                initial={{ opacity: 0, x: dir * 40 }}
+                initial={reduceMotion ? { opacity: 0 } : { opacity: 0, x: dir * 40 }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: dir * -40 }}
-                transition={{ duration: 0.45, ease: EASE }}
+                exit={reduceMotion ? { opacity: 0 } : { opacity: 0, x: dir * -40 }}
+                transition={{ duration: reduceMotion ? 0 : 0.45, ease: EASE }}
                 className="flex flex-col items-center gap-7 text-center"
               >
                 <blockquote className="text-[1.0625rem] italic leading-[1.75] text-[color:var(--color-ink)] sm:text-[1.25rem]">
@@ -111,6 +126,16 @@ export function Testimonials() {
               className="grid size-10 place-items-center rounded-full border border-[color:var(--color-line)] text-[color:var(--color-ink-secondary)] transition-all duration-200 hover:border-[color:var(--color-primary)] hover:bg-[color:var(--color-primary)] hover:text-white active:scale-95"
             >
               <ChevronRight size={18} />
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setUserPaused((value) => !value)}
+              aria-label={userPaused ? 'Play testimonial rotation' : 'Pause testimonial rotation'}
+              aria-pressed={userPaused}
+              className="grid size-10 place-items-center rounded-full border border-[color:var(--color-line)] text-[color:var(--color-ink-secondary)] transition-colors hover:border-[color:var(--color-primary)] hover:text-[color:var(--color-primary)]"
+            >
+              {userPaused ? <Play size={16} /> : <Pause size={16} />}
             </button>
           </div>
         </div>

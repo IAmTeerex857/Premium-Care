@@ -28,6 +28,7 @@ export function SiteLayout() {
       <ScrollToTop />
       <Header />
       <motion.main
+        data-modal-background
         id="main"
         key={pathname}
         initial={{ opacity: 0, y: 8 }}

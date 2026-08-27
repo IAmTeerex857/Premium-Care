@@ -62,11 +62,10 @@ export default function App() {
                 <Route path="contacts/:id" element={<Inbox kind="contact" />} />
 
 
-                <Route path="applications" element={<Inbox kind="application" />} />
-                <Route path="applications/:id" element={<Inbox kind="application" />} />
-
                 {/* Admin only */}
                 <Route element={<RequireAdmin />}>
+                  <Route path="applications" element={<Inbox kind="application" />} />
+                  <Route path="applications/:id" element={<Inbox kind="application" />} />
                   <Route path="team" element={<Team />} />
                 </Route>
 

@@ -198,7 +198,7 @@ const privacySections: Section[] = [
     heading: 'Protected health information',
     blocks: [
       { type: 'p', text: 'Information that relates to your physical or mental health, the care you receive, or payment for that care, and that identifies you, is **protected health information (PHI)**. We treat PHI as confidential and handle it in accordance with HIPAA and applicable state law.' },
-      { type: 'p', text: 'Access to PHI inside our organization is limited to authorized staff. Administrative staff who handle intake can see submissions made through this website in order to respond to them; only administrators can delete records or manage staff accounts. Staff access to a submission is recorded in an access log.' },
+      { type: 'p', text: 'Access to PHI inside our organization is limited by role and assignment. Administrators handle employment applications; other active staff can access only unassigned care enquiries or enquiries assigned to them. The staff portal records when a submission detail page is opened.' },
       { type: 'p', text: 'We do not use PHI for marketing, and we do not sell it. We will not disclose PHI for any purpose that requires your authorization without first obtaining that authorization in writing, and you may revoke such an authorization at any time.' },
     ],
   },
@@ -239,14 +239,12 @@ const privacySections: Section[] = [
     id: 'cookies',
     heading: 'Cookies and analytics',
     blocks: [
-      { type: 'p', text: 'Our website uses a small number of cookies and similar technologies:' },
+      { type: 'p', text: 'Our public website does not currently use advertising or analytics cookies. The staff portal stores the authentication session in the authorized staff member’s browser so that person can remain signed in.' },
       { type: 'list', items: [
-        '**Strictly necessary**: these keep your staff portal session signed in and protect against cross-site request forgery. The site cannot function without them.',
-        '**Preference**: these remember choices such as a dismissed notice.',
-        '**Analytics**: these help us understand aggregate traffic patterns. We configure analytics to avoid collecting information that identifies you individually.',
+        '**Staff authentication**: Supabase stores session information in the authorized staff member’s browser.',
+        '**Hosting and security logs**: our providers may process IP address, browser, and request information needed to operate and secure the service.',
       ]},
-      { type: 'p', text: 'We do not use advertising cookies and we do not permit third-party advertising networks to track you across our site. You can block or delete cookies in your browser settings, though doing so will prevent the staff portal from working.' },
-      { type: 'p', text: 'Our website honours the Global Privacy Control (GPC) signal where your browser sends one.' },
+      { type: 'p', text: 'We do not use advertising cookies or permit third-party advertising networks to track you across our site. Because the site does not sell personal information or use it for targeted advertising, a Global Privacy Control signal does not change those practices.' },
     ],
   },
   {
@@ -257,8 +255,8 @@ const privacySections: Section[] = [
       { type: 'list', items: [
         '**Client care records**: retained for the period required by applicable state and federal law, which for adult clients is commonly a minimum of six to ten years after the last date of service, and for minors is measured from the age of majority.',
         '**Billing and claims records**: retained for the period required by the applicable payer program and by tax law.',
-        '**Website enquiries that do not become clients**: retained for up to 24 months after being closed, then deleted.',
-        '**Job applications**: retained for up to 24 months, including any resume you attach, unless you ask us to remove them sooner.',
+        '**Website enquiries that do not become clients**: closed enquiries are scheduled for deletion after 24 months.',
+        '**Job applications**: closed applications are scheduled for deletion after 24 months, including any attached resume, unless a longer period is legally required.',
         '**Newsletter subscriptions**: retained until you unsubscribe.',
       ]},
       { type: 'p', text: 'When a retention period ends, we securely delete or destroy the information.' },
@@ -291,7 +289,7 @@ const privacySections: Section[] = [
       { type: 'list', items: [
         'Encryption of data in transit and at rest.',
         'Role-based access controls separating administrators from other staff, enforced in the database rather than only in the interface.',
-        'An access log recording which staff member opened which submission, and when.',
+        'An application access log recording submission detail pages opened through the staff portal.',
         'Background checks, confidentiality agreements, and annual privacy training for all staff.',
         'Written Business Associate Agreements with vendors who handle protected health information.',
         'An incident response plan, with breach notification to affected individuals and regulators as required by law.',

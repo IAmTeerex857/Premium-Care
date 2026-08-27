@@ -4,10 +4,12 @@ import { useAuth } from '@/lib/auth'
 import { Logo } from '@/components/layout/Logo'
 import { Button } from '@/components/ui/Button'
 import { Skeleton } from '@/components/ui/Misc'
+import { useSeo } from '@/hooks/useSeo'
 
 type Variant = 'loading' | 'unconfigured' | 'no-profile' | 'deactivated'
 
 export function PortalSplash({ variant }: { variant: Variant }) {
+  useSeo({ title: 'Premium Care Portal', noindex: true })
   const { signOut } = useAuth()
 
   if (variant === 'loading') {
@@ -30,12 +32,14 @@ export function PortalSplash({ variant }: { variant: Variant }) {
     unconfigured: {
       icon: DatabaseZap,
       title: 'Portal not connected yet',
-      body: 'The staff portal needs a Supabase project. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to app/.env.local, run supabase/schema.sql in the SQL editor, then restart the dev server.',
+      body: import.meta.env.DEV
+        ? 'The staff portal needs a Supabase project. Add its environment keys and restart the development server.'
+        : 'The staff portal is temporarily unavailable. Please contact an administrator.',
     },
     'no-profile': {
       icon: AlertTriangle,
       title: 'No staff profile found',
-      body: 'Your account exists but has no staff profile attached, which usually means the signup trigger did not run. Ask an administrator to re-invite you, or confirm that supabase/schema.sql was applied.',
+      body: 'Your account exists but has no staff profile attached. Ask an administrator to review your access or send a new invitation.',
     },
     deactivated: {
       icon: ShieldOff,

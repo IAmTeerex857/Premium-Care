@@ -165,7 +165,7 @@ export function Toast({ message, tone = 'success', onDismiss }: {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 12, scale: 0.97 }}
           transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
-          role="status"
+          role={tone === 'error' ? 'alert' : 'status'}
           className={cn(
             'fixed bottom-6 left-1/2 z-[100] flex -translate-x-1/2 items-center gap-3 rounded-full py-3 pl-4 pr-3 text-[0.875rem] font-medium text-white shadow-[0_16px_40px_-12px_rgba(15,42,61,0.5)]',
             tone === 'success' ? 'bg-[color:var(--color-primary)]' : 'bg-[color:var(--color-warm)]',

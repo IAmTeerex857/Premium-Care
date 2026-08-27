@@ -15,8 +15,11 @@ const schema = z
   .object({
     fullName: z.string().trim().min(2, 'Enter your full name.'),
     email: z.string().trim().email('Enter the email address you were invited with.'),
-    code: z.string().trim().min(6, 'Enter the invitation code your administrator gave you.'),
-    password: z.string().min(8, 'Use at least 8 characters.'),
+    code: z.string().trim().length(16, 'Enter the 16-character invitation code your administrator gave you.'),
+    password: z.string()
+      .min(8, 'Use at least 8 characters.')
+      .regex(/[A-Za-z]/, 'Include at least one letter.')
+      .regex(/\d/, 'Include at least one number.'),
     confirm: z.string(),
   })
   .refine((v) => v.password === v.confirm, {
@@ -27,7 +30,7 @@ const schema = z
 type FormValues = z.infer<typeof schema>
 
 export default function Join() {
-  useSeo({ title: 'Create Your Staff Account, Premium Care' })
+  useSeo({ title: 'Create Your Staff Account, Premium Care', noindex: true })
 
   const { signUp, session } = useAuth()
   const navigate = useNavigate()
@@ -71,7 +74,11 @@ export default function Join() {
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-5">
           {!isSupabaseConfigured && (
-            <Notice tone="warn">Supabase is not connected. Add your keys to <code>app/.env.local</code> first.</Notice>
+            <Notice tone="warn">
+              {import.meta.env.DEV
+                ? <>Supabase is not connected. Add your keys to <code>app/.env.local</code> first.</>
+                : 'Account creation is temporarily unavailable.'}
+            </Notice>
           )}
           {error && <Notice tone="warn">{error}</Notice>}
 
@@ -79,12 +86,12 @@ export default function Join() {
           <Input label="Invited email address" type="email" autoComplete="email" required error={errors.email?.message} {...register('email')} />
           <Input
             label="Invitation code" required autoComplete="off" spellCheck={false}
-            placeholder="ABCD2345"
+            placeholder="ABCD2345EFGH6789"
             hint="From the invitation your administrator sent you"
             className="font-[var(--font-mono)] tracking-[0.18em] uppercase"
             error={errors.code?.message} {...register('code')}
           />
-          <Input label="Password" type="password" autoComplete="new-password" required hint="At least 8 characters" error={errors.password?.message} {...register('password')} />
+          <Input label="Password" type="password" autoComplete="new-password" required hint="At least 8 characters, including a letter and number" error={errors.password?.message} {...register('password')} />
           <Input label="Confirm password" type="password" autoComplete="new-password" required error={errors.confirm?.message} {...register('confirm')} />
 
           <Button type="submit" size="lg" full disabled={state === 'loading' || !isSupabaseConfigured}>

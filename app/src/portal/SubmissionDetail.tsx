@@ -28,9 +28,10 @@ export function SubmissionDetail({ id, kind, onChanged }: {
   const [error, setError] = useState<string | null>(null)
   const [noteText, setNoteText] = useState('')
   const [savingNote, setSavingNote] = useState(false)
-  const [toast, setToast] = useState<string | null>(null)
+  const [toast, setToast] = useState<{ message: string; tone: 'success' | 'error' } | null>(null)
 
   const listRoute = routeFor(kind)
+  const availableAssignees = isAdmin ? staff : staff.filter((member) => member.id === profile?.id)
 
   // Tracks the submission the newest request was issued for, so a slow
   // response for a previously viewed row cannot overwrite the current one.
@@ -39,10 +40,11 @@ export function SubmissionDetail({ id, kind, onChanged }: {
   const load = useCallback(async () => {
     setError(null)
     try {
-      const [s, n, p] = await Promise.all([fetchSubmission(id), fetchNotes(id), fetchProfiles()])
+      const s = await fetchSubmission(id)
+      await logSubmissionAccess(id)
+      const [n, p] = await Promise.all([fetchNotes(id), fetchProfiles()])
       if (currentId.current !== id) return
       setRow(s); setNotes(n); setStaff(p.filter((x) => x.is_active))
-      void logSubmissionAccess(id)
     } catch (err) {
       if (currentId.current !== id) return
       setError(err instanceof Error ? err.message : 'Failed to load this submission.')
@@ -65,11 +67,11 @@ export function SubmissionDetail({ id, kind, onChanged }: {
     setRow({ ...row, status })
     try {
       await updateSubmission(row.id, { status })
-      setToast(`Marked as ${STATUS_LABEL[status].toLowerCase()}`)
+      setToast({ message: `Marked as ${STATUS_LABEL[status].toLowerCase()}`, tone: 'success' })
       onChanged()
     } catch (err) {
       setRow({ ...row, status: previous })
-      setToast(err instanceof Error ? err.message : 'Could not update the status.')
+      setToast({ message: err instanceof Error ? err.message : 'Could not update the status.', tone: 'error' })
     }
   }
 
@@ -78,10 +80,10 @@ export function SubmissionDetail({ id, kind, onChanged }: {
     try {
       await updateSubmission(row.id, { assigned_to })
       await load()
-      setToast(assigned_to ? 'Assignment updated' : 'Assignment cleared')
+      setToast({ message: assigned_to ? 'Assignment updated' : 'Assignment cleared', tone: 'success' })
       onChanged()
     } catch (err) {
-      setToast(err instanceof Error ? err.message : 'Could not update the assignment.')
+      setToast({ message: err instanceof Error ? err.message : 'Could not update the assignment.', tone: 'error' })
     }
   }
 
@@ -94,7 +96,7 @@ export function SubmissionDetail({ id, kind, onChanged }: {
       setNoteText('')
       setNotes(await fetchNotes(id))
     } catch (err) {
-      setToast(err instanceof Error ? err.message : 'Could not save the note.')
+      setToast({ message: err instanceof Error ? err.message : 'Could not save the note.', tone: 'error' })
     } finally {
       setSavingNote(false)
     }
@@ -107,7 +109,7 @@ export function SubmissionDetail({ id, kind, onChanged }: {
       onChanged()
       navigate(listRoute, { replace: true })
     } catch (err) {
-      setToast(err instanceof Error ? err.message : 'Could not delete the submission.')
+      setToast({ message: err instanceof Error ? err.message : 'Could not delete the submission.', tone: 'error' })
     }
   }
 
@@ -273,7 +275,7 @@ export function SubmissionDetail({ id, kind, onChanged }: {
               className="h-11 w-full cursor-pointer rounded-xl border-[1.5px] border-[color:var(--color-line)] bg-[color:var(--color-bg-muted)] px-3 text-[0.875rem] outline-none focus:border-[color:var(--color-primary-light)]"
             >
               <option value="">Unassigned</option>
-              {staff.map((p) => (
+              {availableAssignees.map((p) => (
                 <option key={p.id} value={p.id}>{p.full_name ?? p.email}</option>
               ))}
             </select>
@@ -299,7 +301,7 @@ export function SubmissionDetail({ id, kind, onChanged }: {
         </div>
       </div>
 
-      <Toast message={toast} onDismiss={() => setToast(null)} />
+      <Toast message={toast?.message ?? null} tone={toast?.tone} onDismiss={() => setToast(null)} />
     </>
   )
 }

@@ -3,7 +3,7 @@ import { OrbField } from '@/components/ui/Orb'
 import { useSeo } from '@/hooks/useSeo'
 
 export default function NotFound() {
-  useSeo({ title: 'Page not found, Premium Care' })
+  useSeo({ title: 'Page not found, Premium Care', noindex: true })
 
   return (
     <section className="relative grid min-h-[70vh] place-items-center overflow-hidden bg-[color:var(--color-bg-soft)]">

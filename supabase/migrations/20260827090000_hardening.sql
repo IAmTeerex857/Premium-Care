@@ -15,11 +15,22 @@ alter table public.invites add column if not exists expires_at timestamptz
   not null default (now() + interval '7 days');
 alter table public.invites add column if not exists revoked_at timestamptz;
 
--- The old plaintext `code` column is a credential at rest. Migrate any
--- existing rows to a hash, then drop it.
-update public.invites
-   set code_hash = encode(extensions.digest(code, 'sha256'), 'hex')
- where code_hash is null and code is not null;
+-- Dynamic SQL keeps this replay-safe after the legacy column has been dropped:
+-- PostgreSQL otherwise resolves `code` while parsing the migration.
+do $migration$
+begin
+  if exists (
+    select 1 from information_schema.columns
+     where table_schema = 'public' and table_name = 'invites' and column_name = 'code'
+  ) then
+    execute $sql$
+      update public.invites
+         set code_hash = encode(extensions.digest(code, 'sha256'), 'hex')
+       where code_hash is null and code is not null
+    $sql$;
+  end if;
+end
+$migration$;
 
 alter table public.invites drop column if exists code;
 
@@ -160,7 +171,8 @@ create trigger submissions_guard_update
   for each row execute function public.guard_submission_update();
 
 -- ---------------------------------------------------------------------------
--- 6. Rate limit anonymous submissions (10 per email per hour, 60/hour global)
+-- 6. Legacy database limiter (retired; submit-public applies an atomic,
+--    per-hashed-IP limit without a global denial-of-service counter)
 -- ---------------------------------------------------------------------------
 create or replace function public.rate_limit_submissions()
 returns trigger language plpgsql security definer set search_path = public as $$
@@ -187,9 +199,6 @@ begin
 end $$;
 
 drop trigger if exists submissions_rate_limit on public.submissions;
-create trigger submissions_rate_limit
-  before insert on public.submissions
-  for each row execute function public.rate_limit_submissions();
 
 -- ---------------------------------------------------------------------------
 -- 7. Access audit for reads of submission content (privacy policy commitment)

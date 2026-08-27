@@ -13,7 +13,7 @@ type SubmitInput = {
   payload?: Record<string, unknown>
 }
 
-export async function createSubmission(input: SubmitInput): Promise<void> {
+export async function createSubmission(input: SubmitInput, resume?: File): Promise<void> {
   if (!isSupabaseConfigured) {
     // Never silently swallow a real enquiry. Local persistence is a dev-only
     // convenience; a production build without keys must fail loudly.
@@ -30,53 +30,19 @@ export async function createSubmission(input: SubmitInput): Promise<void> {
     return
   }
 
-  const { error } = await requireSupabase()
-    .from('submissions')
-    .insert({
-      kind: input.kind,
-      name: input.name ?? null,
-      email: input.email ?? null,
-      phone: input.phone ?? null,
-      subject: input.subject ?? null,
-      message: input.message ?? null,
-      payload: input.payload ?? {},
-    })
-
-  if (error) throw new Error(error.message)
-}
-
-/* ============================== Resume upload ============================ */
-
-/**
- * Uploads a resume to the private `resumes` bucket and returns its path.
- * Anonymous visitors may write but never read, so the file is only reachable
- * by staff through a short-lived signed URL.
- */
-export async function uploadResume(file: File): Promise<string> {
-  if (!isSupabaseConfigured) {
-    if (!import.meta.env.DEV) throw new Error('Resume upload is temporarily unavailable.')
-    return `demo/${file.name}`
+  const body = resume ? new FormData() : input
+  if (body instanceof FormData) {
+    body.set('submission', JSON.stringify(input))
+    body.set('resume', resume!)
   }
 
-  const ext = file.name.split('.').pop()?.toLowerCase() ?? 'pdf'
-  const safe = file.name.replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 60)
-  const path = `${new Date().getFullYear()}/${crypto.randomUUID()}-${safe}`.replace(/\.[^.]*$/, `.${ext}`)
-
-  const { error } = await requireSupabase()
-    .storage.from('resumes')
-    .upload(path, file, { contentType: file.type || undefined, upsert: false })
-
-  if (error) throw new Error(`Could not upload your resume: ${error.message}`)
-  return path
+  const { error } = await requireSupabase().functions.invoke('submit-public', { body })
+  if (error) throw new Error('Could not send your request. Please try again or call us.')
 }
+
+/* ============================== Resume access ============================ */
 
 /** Staff-only, time-limited download link for an uploaded resume. */
-/** Best-effort rollback so a failed application does not orphan its upload. */
-export async function deleteResume(path: string): Promise<void> {
-  if (!isSupabaseConfigured) return
-  await requireSupabase().storage.from('resumes').remove([path]).catch(() => {})
-}
-
 export async function getResumeUrl(path: string, expiresInSeconds = 300): Promise<string> {
   const { data, error } = await requireSupabase()
     .storage.from('resumes')
@@ -110,7 +76,8 @@ export async function fetchSubmissions(filters: {
   }
   if (filters.status && filters.status !== 'all') q = q.eq('status', filters.status)
   if (filters.search?.trim()) {
-    const s = `%${filters.search.trim()}%`
+    const escaped = filters.search.trim().replace(/\\/g, '\\\\').replace(/"/g, '\\"')
+    const s = `"%${escaped}%"`
     q = q.or(`name.ilike.${s},email.ilike.${s},subject.ilike.${s},message.ilike.${s}`)
   }
 
@@ -138,7 +105,8 @@ export async function fetchDailyVolume(days = 14): Promise<Array<{ day: string; 
 /** Records that a staff member opened a submission (privacy policy §8). */
 export async function logSubmissionAccess(id: string): Promise<void> {
   if (!isSupabaseConfigured) return
-  await requireSupabase().rpc('log_submission_access', { p_submission_id: id, p_action: 'view' })
+  const { error } = await requireSupabase().rpc('log_submission_access', { p_submission_id: id, p_action: 'view' })
+  if (error) throw new Error(error.message)
 }
 
 export async function fetchSubmission(id: string): Promise<Submission> {
@@ -261,7 +229,7 @@ async function sha256Hex(value: string) {
 
 function generateInviteCode() {
   const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
-  const bytes = crypto.getRandomValues(new Uint8Array(8))
+  const bytes = crypto.getRandomValues(new Uint8Array(16))
   return Array.from(bytes, (b) => alphabet[b % alphabet.length]).join('')
 }
 

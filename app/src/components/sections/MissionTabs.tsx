@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Check } from 'lucide-react'
 import { missionTabs } from '@/data/content'
@@ -11,7 +11,22 @@ const EASE = [0.23, 1, 0.32, 1] as const
 /** Segmented-control tabbed section, spec §8.3. */
 export function MissionTabs() {
   const [active, setActive] = useState<(typeof missionTabs)[number]['id']>(missionTabs[0].id)
+  const tabRefs = useRef<Array<HTMLButtonElement | null>>([])
   const tab = missionTabs.find((t) => t.id === active)!
+
+  function onKeyDown(event: React.KeyboardEvent<HTMLButtonElement>, index: number) {
+    let next = index
+    if (event.key === 'ArrowRight') next = (index + 1) % missionTabs.length
+    else if (event.key === 'ArrowLeft') next = (index - 1 + missionTabs.length) % missionTabs.length
+    else if (event.key === 'Home') next = 0
+    else if (event.key === 'End') next = missionTabs.length - 1
+    else return
+
+    event.preventDefault()
+    const nextTab = missionTabs[next]!
+    setActive(nextTab.id)
+    tabRefs.current[next]?.focus()
+  }
 
   return (
     <section className="section bg-[color:var(--color-bg-soft)]">
@@ -25,14 +40,17 @@ export function MissionTabs() {
             aria-label="Mission, vision and approach"
             className="mt-3 inline-flex rounded-full border border-[color:var(--color-line)] bg-white p-1.5 shadow-[0_1px_3px_rgba(15,42,61,0.06)]"
           >
-            {missionTabs.map((t) => (
+            {missionTabs.map((t, index) => (
               <button
                 key={t.id}
+                ref={(element) => { tabRefs.current[index] = element }}
                 role="tab"
+                tabIndex={active === t.id ? 0 : -1}
                 aria-selected={active === t.id}
                 aria-controls={`panel-${t.id}`}
                 id={`tab-${t.id}`}
                 onClick={() => setActive(t.id)}
+                onKeyDown={(event) => onKeyDown(event, index)}
                 className={cn(
                   'relative rounded-full px-4 py-2 font-[var(--font-display)] text-[0.8125rem] font-semibold transition-colors duration-200 sm:px-6 sm:text-[0.9375rem]',
                   active === t.id ? 'text-white' : 'text-[color:var(--color-ink-muted)] hover:text-[color:var(--color-primary)]',

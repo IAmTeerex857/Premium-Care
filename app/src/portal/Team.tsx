@@ -33,6 +33,8 @@ export default function Team() {
   const [error, setError] = useState<string | null>(null)
   const [toast, setToast] = useState<string | null>(null)
   const [showForm, setShowForm] = useState(false)
+  // Shown exactly once: only the hash is stored, so it cannot be recovered.
+  const [issued, setIssued] = useState<{ email: string; code: string } | null>(null)
 
   const load = useCallback(async () => {
     setError(null)
@@ -107,13 +109,44 @@ export default function Team() {
               adminId={profile?.id ?? ''}
               onCreated={async (invite) => {
                 await load()
-                setToast(`Invitation created for ${invite.email}`)
+                setIssued({ email: invite.email, code: invite.code })
                 setShowForm(false)
               }}
             />
           </motion.div>
         )}
       </AnimatePresence>
+
+      {issued && (
+        <Panel className="mb-5 border-[color:var(--color-primary-light)]/40 p-6">
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <h2 className="t-h4 text-[1rem]">Invitation code for {issued.email}</h2>
+              <p className="mt-1 text-[0.875rem] text-[color:var(--color-ink-secondary)]">
+                Send this code and the join link to your new team member. It is shown once and
+                cannot be recovered, expires in 7 days, and works a single time.
+              </p>
+              <div className="mt-4 flex flex-wrap items-center gap-3">
+                <code className="rounded-xl bg-[color:var(--color-bg-soft)] px-4 py-3 font-[var(--font-mono)] text-[1.125rem] font-bold tracking-[0.2em] text-[color:var(--color-primary)]">
+                  {issued.code}
+                </code>
+                <CopyButton text={issued.code} label="Copy code" />
+                <CopyButton
+                  text={`${window.location.origin}/portal/join`}
+                  label="Copy join link"
+                />
+              </div>
+            </div>
+            <button
+              onClick={() => setIssued(null)}
+              aria-label="Dismiss"
+              className="grid size-8 shrink-0 place-items-center rounded-full text-[color:var(--color-ink-muted)] hover:bg-[color:var(--color-bg-soft)]"
+            >
+              <X size={16} />
+            </button>
+          </div>
+        </Panel>
+      )}
 
       {error ? (
         <Panel><ErrorState message={error} onRetry={() => void load()} /></Panel>
@@ -140,6 +173,7 @@ export default function Team() {
                       </div>
                       <p className="mt-0.5 truncate text-[0.8125rem] text-[color:var(--color-ink-muted)]">
                         {i.email} · invited {formatDate(i.created_at, { month: 'short', day: 'numeric' })}
+                        {i.expires_at && ` · expires ${formatDate(i.expires_at, { month: 'short', day: 'numeric' })}`}
                       </p>
                     </div>
                     <div className="flex shrink-0 items-center gap-2">
@@ -230,8 +264,9 @@ export default function Team() {
 
           <Notice>
             <strong className="font-semibold">How invitations work:</strong> creating an invitation does not send an
-            email by itself, pass the join link to your new member however you normally would. When they sign up at{' '}
-            <code>/portal/join</code> with the invited email address, the database grants them the role you selected here.
+            email by itself. Give your new member the code and the join link. At <code>/portal/join</code> they enter
+            the invited email address and that code, and the database grants them the role you chose. Only a hash of
+            the code is stored, so it can never be read back; if it is lost, revoke the invitation and issue a new one.
           </Notice>
         </div>
       )}
@@ -272,7 +307,7 @@ function CopyButton({ text, label }: { text: string; label: string }) {
   )
 }
 
-function InviteForm({ adminId, onCreated }: { adminId: string; onCreated: (invite: Invite) => void }) {
+function InviteForm({ adminId, onCreated }: { adminId: string; onCreated: (invite: Invite & { code: string }) => void }) {
   const [state, setState] = useState<SubmitState>('idle')
   const [error, setError] = useState<string | null>(null)
 

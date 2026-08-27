@@ -15,6 +15,7 @@ const schema = z
   .object({
     fullName: z.string().trim().min(2, 'Enter your full name.'),
     email: z.string().trim().email('Enter the email address you were invited with.'),
+    code: z.string().trim().min(6, 'Enter the invitation code your administrator gave you.'),
     password: z.string().min(8, 'Use at least 8 characters.'),
     confirm: z.string(),
   })
@@ -41,7 +42,7 @@ export default function Join() {
   async function onSubmit(v: FormValues) {
     setError(null); setState('loading')
     try {
-      await signUp(v.email, v.password, v.fullName)
+      await signUp(v.email, v.password, v.fullName, v.code)
       setState('success')
       setDone(true)
       // If email confirmation is off, the session already exists.
@@ -55,7 +56,7 @@ export default function Join() {
   return (
     <PortalShell
       title="Create your account"
-      subtitle="Use the exact email address your administrator invited. Accounts can only be created from an existing invitation."
+      subtitle="Use the exact email address you were invited with, plus the invitation code. Accounts cannot be created any other way."
       footer={
         <>
           Already have an account?{' '}
@@ -76,6 +77,13 @@ export default function Join() {
 
           <Input label="Full name" autoComplete="name" required error={errors.fullName?.message} {...register('fullName')} />
           <Input label="Invited email address" type="email" autoComplete="email" required error={errors.email?.message} {...register('email')} />
+          <Input
+            label="Invitation code" required autoComplete="off" spellCheck={false}
+            placeholder="ABCD2345"
+            hint="From the invitation your administrator sent you"
+            className="font-[var(--font-mono)] tracking-[0.18em] uppercase"
+            error={errors.code?.message} {...register('code')}
+          />
           <Input label="Password" type="password" autoComplete="new-password" required hint="At least 8 characters" error={errors.password?.message} {...register('password')} />
           <Input label="Confirm password" type="password" autoComplete="new-password" required error={errors.confirm?.message} {...register('confirm')} />
 

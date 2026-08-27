@@ -113,8 +113,8 @@ export function routeFor(kind: SubmissionKind) {
   return {
     booking: '/portal/bookings',
     contact: '/portal/contacts',
-    referral: '/portal/referrals',
     application: '/portal/applications',
     newsletter: '/portal/contacts',
+    referral: '/portal/contacts',   // legacy rows only; the inbox is gone
   }[kind]
 }

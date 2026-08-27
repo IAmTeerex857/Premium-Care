@@ -1,6 +1,5 @@
 -- ============================================================================
 -- Premium Care — email notification webhook
--- Paste into the Supabase SQL Editor and Run, AFTER schema.sql.
 -- Safe to re-run.
 --
 -- Fires the notify-submission edge function on every new public form

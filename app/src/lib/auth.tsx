@@ -10,7 +10,8 @@ type AuthState = {
   configured: boolean
   isAdmin: boolean
   signIn: (email: string, password: string) => Promise<void>
-  signUp: (email: string, password: string, fullName: string) => Promise<void>
+  signUp: (email: string, password: string, fullName: string, inviteCode: string) => Promise<void>
+  updatePassword: (password: string) => Promise<void>
   signOut: () => Promise<void>
   resetPassword: (email: string) => Promise<void>
   refreshProfile: () => Promise<void>
@@ -75,19 +76,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (error) throw new Error(error.message)
       },
 
-      async signUp(email, password, fullName) {
+      async signUp(email, password, fullName, inviteCode) {
         if (!supabase) throw new Error('Supabase is not configured.')
         const { error } = await supabase.auth.signUp({
           email: email.trim(),
           password,
-          options: { data: { full_name: fullName.trim() } },
+          options: { data: { full_name: fullName.trim(), invite_code: inviteCode.trim().toUpperCase() } },
         })
         if (error) {
           // The signup trigger raises when no invitation exists. Supabase often
           // surfaces that as a generic "Database error saving new user", so match
           // both the raised message and the generic wrapper.
           if (/invitation/i.test(error.message) || /database error saving new user/i.test(error.message)) {
-            throw new Error('No pending invitation exists for that email address. Ask an administrator to invite you first.')
+            throw new Error('That invitation code is not valid for this email address, or it has expired. Ask an administrator for a new invitation.')
           }
           throw new Error(error.message)
         }
@@ -102,8 +103,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       async resetPassword(email) {
         if (!supabase) throw new Error('Supabase is not configured.')
         const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-          redirectTo: `${window.location.origin}/portal/login`,
+          redirectTo: `${window.location.origin}/portal/reset-password`,
         })
+        if (error) throw new Error(error.message)
+      },
+
+      async updatePassword(password) {
+        if (!supabase) throw new Error('Supabase is not configured.')
+        const { error } = await supabase.auth.updateUser({ password })
         if (error) throw new Error(error.message)
       },
 

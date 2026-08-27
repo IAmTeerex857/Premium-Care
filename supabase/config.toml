@@ -412,3 +412,10 @@ enabled = true
 # declarative_schema_path = "./schemas"
 # JSON string passed through to pg-delta SQL formatting.
 # format_options = "{\"keywordCase\":\"upper\",\"indent\":2,\"maxWidth\":80,\"commaStyle\":\"trailing\"}"
+
+# The notification webhook is called by a Postgres trigger, which carries no
+# user JWT. Authentication is the x-webhook-secret header instead, checked in
+# the function itself. Pinning this here stops a redeploy from silently
+# re-enabling JWT verification and breaking delivery.
+[functions.notify-submission]
+verify_jwt = false

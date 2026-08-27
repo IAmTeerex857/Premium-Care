@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ArrowLeft, Download, Mail, Phone, Send, Trash2 } from 'lucide-react'
 import {
-  addNote, deleteSubmission, fetchNotes, fetchProfiles, fetchSubmission, getResumeUrl, updateSubmission,
+  addNote, deleteSubmission, fetchNotes, fetchProfiles, fetchSubmission, getResumeUrl,
+  logSubmissionAccess, updateSubmission,
 } from '@/lib/api'
 import { useAuth } from '@/lib/auth'
 import type { Profile, Submission, SubmissionKind, SubmissionNote, SubmissionStatus } from '@/lib/types'
@@ -31,19 +32,32 @@ export function SubmissionDetail({ id, kind, onChanged }: {
 
   const listRoute = routeFor(kind)
 
+  // Tracks the submission the newest request was issued for, so a slow
+  // response for a previously viewed row cannot overwrite the current one.
+  const currentId = useRef(id)
+
   const load = useCallback(async () => {
     setError(null)
     try {
       const [s, n, p] = await Promise.all([fetchSubmission(id), fetchNotes(id), fetchProfiles()])
+      if (currentId.current !== id) return
       setRow(s); setNotes(n); setStaff(p.filter((x) => x.is_active))
+      void logSubmissionAccess(id)
     } catch (err) {
+      if (currentId.current !== id) return
       setError(err instanceof Error ? err.message : 'Failed to load this submission.')
     } finally {
-      setLoading(false)
+      if (currentId.current === id) setLoading(false)
     }
   }, [id])
 
-  useEffect(() => { void load() }, [load])
+  useEffect(() => {
+    currentId.current = id
+    setLoading(true)
+    setRow(null)
+    setNotes([])
+    void load()
+  }, [id, load])
 
   async function changeStatus(status: SubmissionStatus) {
     if (!row) return

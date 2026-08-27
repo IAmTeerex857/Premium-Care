@@ -19,6 +19,7 @@ const NotFound = lazy(() => import('@/pages/NotFound'))
 /* Portal */
 const Login = lazy(() => import('@/portal/Login'))
 const Join = lazy(() => import('@/portal/Join'))
+const ResetPassword = lazy(() => import('@/portal/ResetPassword'))
 const Dashboard = lazy(() => import('@/portal/Dashboard'))
 const Team = lazy(() => import('@/portal/Team'))
 
@@ -48,6 +49,7 @@ export default function App() {
             {/* ---------------- Staff portal ---------------- */}
             <Route path="portal/login" element={<Login />} />
             <Route path="portal/join" element={<Join />} />
+            <Route path="portal/reset-password" element={<ResetPassword />} />
 
             <Route path="portal" element={<RequireStaff />}>
               <Route element={<PortalLayout />}>

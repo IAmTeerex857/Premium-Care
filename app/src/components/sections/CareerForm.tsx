@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { motion } from 'framer-motion'
 import { Check, Paperclip, X } from 'lucide-react'
-import { createSubmission, uploadResume } from '@/lib/api'
+import { createSubmission, deleteResume, uploadResume } from '@/lib/api'
 import { isSupabaseConfigured } from '@/lib/supabase'
 import { CheckboxPill, Input, Select, Textarea } from '@/components/ui/Field'
 import { Button, ArrowIcon } from '@/components/ui/Button'
@@ -56,11 +56,27 @@ export function CareerForm() {
 
   const license = watch('license')
 
-  function pickResume(file: File | null) {
+  /** Signature check, because an extension proves nothing about content. */
+  async function sniff(file: File): Promise<boolean> {
+    const head = new Uint8Array(await file.slice(0, 8).arrayBuffer())
+    const starts = (...bytes: number[]) => bytes.every((b, i) => head[i] === b)
+    if (starts(0x25, 0x50, 0x44, 0x46)) return true                 // %PDF
+    if (starts(0x50, 0x4b, 0x03, 0x04)) return true                 // zip (docx)
+    if (starts(0xd0, 0xcf, 0x11, 0xe0)) return true                 // legacy .doc
+    if (starts(0x7b, 0x5c, 0x72, 0x74)) return true                 // {\rt (rtf)
+    // Plain text has no signature; accept only if it really is text/plain.
+    return file.type === 'text/plain' || file.name.toLowerCase().endsWith('.txt')
+  }
+
+  async function pickResume(file: File | null) {
     setResumeError(null)
     if (!file) return setResume(null)
     if (file.size > MAX_RESUME_BYTES) {
       setResumeError('That file is larger than 10 MB. Please attach a smaller file.')
+      return
+    }
+    if (!(await sniff(file))) {
+      setResumeError('That does not look like a PDF, Word, RTF or text document.')
       return
     }
     setResume(file)
@@ -77,7 +93,8 @@ export function CareerForm() {
         resumeName = resume.name
       }
 
-      await createSubmission({
+      try {
+        await createSubmission({
         kind: 'application',
         name: v.name,
         email: v.email,
@@ -97,7 +114,12 @@ export function CareerForm() {
           resume_path: resumePath,
           resume_filename: resumeName,
         },
-      })
+        })
+      } catch (err) {
+        // Do not leave the uploaded file orphaned in storage.
+        if (resumePath) await deleteResume(resumePath)
+        throw err
+      }
       setState('success')
       reset()
       setResume(null)
@@ -221,8 +243,8 @@ export function CareerForm() {
             {resume && (
               <span
                 role="button" tabIndex={0} aria-label="Remove attached resume"
-                onClick={(e) => { e.preventDefault(); pickResume(null) }}
-                onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); pickResume(null) } }}
+                onClick={(e) => { e.preventDefault(); void pickResume(null) }}
+                onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); void pickResume(null) } }}
                 className="grid size-7 shrink-0 place-items-center rounded-full text-[color:var(--color-ink-muted)] hover:bg-white hover:text-[color:var(--color-warm)]"
               >
                 <X size={14} />
@@ -232,7 +254,7 @@ export function CareerForm() {
               type="file"
               className="sr-only"
               accept=".pdf,.doc,.docx,.rtf,.txt,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain,application/rtf"
-              onChange={(e) => pickResume(e.target.files?.[0] ?? null)}
+              onChange={(e) => void pickResume(e.target.files?.[0] ?? null)}
             />
           </label>
           <p className={cn('text-[0.8125rem]', resumeError ? 'text-[color:var(--color-warm)]' : 'text-[color:var(--color-ink-muted)]')}>

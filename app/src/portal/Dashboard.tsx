@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom'
 import {
   BarChart3, Briefcase, CalendarCheck, Inbox, Mail, TrendingUp, type LucideIcon,
 } from 'lucide-react'
-import { fetchSubmissions, subscribeToSubmissions } from '@/lib/api'
+import { fetchDailyVolume, fetchSubmissionCounts, fetchSubmissions, subscribeToSubmissions } from '@/lib/api'
 import { useAuth } from '@/lib/auth'
-import type { Submission, SubmissionKind } from '@/lib/types'
+import type { Submission, SubmissionKind, SubmissionStatus } from '@/lib/types'
 import { cn, formatDate } from '@/lib/utils'
 import { Skeleton } from '@/components/ui/Misc'
 import { ArrowIcon } from '@/components/ui/Button'
@@ -23,13 +23,22 @@ export default function Dashboard() {
 
   const { profile } = useAuth()
   const [rows, setRows] = useState<Submission[]>([])
+  const [counts, setCounts] = useState<Array<{ kind: SubmissionKind; status: SubmissionStatus; count: number }>>([])
+  const [volume, setVolume] = useState<Array<{ day: string; count: number }>>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   const load = useCallback(async () => {
     setError(null)
     try {
-      setRows(await fetchSubmissions())
+      // Counts and chart come from Postgres aggregates, so they stay correct
+      // however many rows exist; the feed only needs the newest few.
+      const [recent, c, v] = await Promise.all([
+        fetchSubmissions({ pageSize: 8 }),
+        fetchSubmissionCounts(),
+        fetchDailyVolume(14),
+      ])
+      setRows(recent.rows); setCounts(c); setVolume(v)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load submissions.')
     } finally {
@@ -42,38 +51,25 @@ export default function Dashboard() {
     return subscribeToSubmissions(() => void load())
   }, [load])
 
-  const counts = useMemo(() => {
+  const summary = useMemo(() => {
     const byKind = {} as Record<SubmissionKind, { total: number; open: number }>
     for (const t of tiles) byKind[t.kind] = { total: 0, open: 0 }
     let openAll = 0
-    for (const r of rows) {
-      const bucket = byKind[r.kind]
+    for (const c of counts) {
+      const bucket = byKind[c.kind]
       if (bucket) {
-        bucket.total += 1
-        if (r.status !== 'closed') bucket.open += 1
+        bucket.total += c.count
+        if (c.status !== 'closed') bucket.open += c.count
       }
-      if (r.status !== 'closed') openAll += 1
+      if (c.status !== 'closed') openAll += c.count
     }
     return { byKind, openAll }
-  }, [rows])
+  }, [counts])
 
-  // Last 14 days of volume for the sparkline chart.
-  const series = useMemo(() => {
-    const days: { date: string; count: number }[] = []
-    for (let i = 13; i >= 0; i--) {
-      const d = new Date()
-      d.setHours(0, 0, 0, 0)
-      d.setDate(d.getDate() - i)
-      days.push({ date: d.toISOString().slice(0, 10), count: 0 })
-    }
-    const index = new Map(days.map((d, i) => [d.date, i]))
-    for (const r of rows) {
-      const key = r.created_at.slice(0, 10)
-      const i = index.get(key)
-      if (i !== undefined) days[i]!.count += 1
-    }
-    return days
-  }, [rows])
+  const series = useMemo(
+    () => volume.map((v) => ({ date: v.day, count: Number(v.count) })),
+    [volume],
+  )
 
   const peak = Math.max(1, ...series.map((d) => d.count))
   const firstName = profile?.full_name?.split(' ')[0] ?? 'there'
@@ -85,8 +81,8 @@ export default function Dashboard() {
         subtitle={
           loading
             ? 'Loading the latest activity…'
-            : counts.openAll > 0
-              ? `${counts.openAll} submission${counts.openAll === 1 ? '' : 's'} still open across all inboxes.`
+            : summary.openAll > 0
+              ? `${summary.openAll} submission${summary.openAll === 1 ? '' : 's'} still open across all inboxes.`
               : 'Every inbox is clear. Nice work.'
         }
       />
@@ -98,7 +94,7 @@ export default function Dashboard() {
           {/* Stat tiles */}
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {tiles.map((t) => {
-              const c = counts.byKind[t.kind]
+              const c = summary.byKind[t.kind]
               return (
                 <Link
                   key={t.kind} to={t.to}
@@ -182,7 +178,7 @@ export default function Dashboard() {
                 {series.reduce((a, d) => a + d.count, 0)} submissions received
               </p>
 
-              {series.every((d) => d.count === 0) ? (
+              {series.length === 0 || series.every((d) => d.count === 0) ? (
                 <div className="mt-6 flex h-40 flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[color:var(--color-line)] text-center">
                   <BarChart3 size={22} className="text-[color:var(--color-ink-muted)]" />
                   <p className="text-[0.875rem] font-medium text-[color:var(--color-ink-secondary)]">No submissions yet</p>
@@ -212,7 +208,7 @@ export default function Dashboard() {
                   </div>
 
                   <div className="mt-3 flex justify-between text-[0.6875rem] text-[color:var(--color-ink-muted)]">
-                    <span>{formatDate(series[0]!.date, { month: 'short', day: 'numeric' })}</span>
+                    <span>{formatDate(series[0]?.date ?? new Date().toISOString(), { month: 'short', day: 'numeric' })}</span>
                     <span>Busiest day: {peak}</span>
                     <span>Today</span>
                   </div>

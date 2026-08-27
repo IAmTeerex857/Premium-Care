@@ -1,5 +1,7 @@
 export type UserRole = 'admin' | 'member'
 export type SubmissionStatus = 'new' | 'in_progress' | 'closed'
+// 'referral' remains in the database enum for historical rows but is no
+// longer offered anywhere in the product.
 export type SubmissionKind = 'booking' | 'contact' | 'referral' | 'application' | 'newsletter'
 
 export type Profile = {
@@ -41,7 +43,8 @@ export type Invite = {
   email: string
   role: UserRole
   full_name: string | null
-  code: string
+  expires_at: string
+  revoked_at: string | null
   accepted_at: string | null
   accepted_by: string | null
   invited_by: string | null

@@ -176,7 +176,7 @@ const privacySections: Section[] = [
         '**Care information**: the needs you describe, including diagnoses, mobility, cognition, current supports, medications, and safety concerns.',
         '**Scheduling preferences**: preferred dates, times, and the services you are interested in.',
         '**Insurance and funding information**: your funding source, member or policy identifiers, and information needed to verify benefits on your behalf.',
-        '**Employment information**: for job applicants: work history, certifications, licenses, availability, and anything else submitted through our careers page.',
+        '**Employment information**: for job applicants: work history, certifications, licenses, availability, and any resume you attach. Resumes are stored in encrypted private storage that is not publicly reachable, and are opened by staff through short-lived links.',
       ]},
       { type: 'sub', text: 'Information we create in the course of care' },
       { type: 'list', items: [
@@ -198,7 +198,7 @@ const privacySections: Section[] = [
     heading: 'Protected health information',
     blocks: [
       { type: 'p', text: 'Information that relates to your physical or mental health, the care you receive, or payment for that care, and that identifies you, is **protected health information (PHI)**. We treat PHI as confidential and handle it in accordance with HIPAA and applicable state law.' },
-      { type: 'p', text: 'Access to PHI inside our organization is limited by role. A caregiver sees the care plan and notes for the clients they are assigned to. A coordinator sees the records of the families in their portfolio. Administrative access is restricted to staff whose duties require it, and access to health information is logged.' },
+      { type: 'p', text: 'Access to PHI inside our organization is limited to authorized staff. Administrative staff who handle intake can see submissions made through this website in order to respond to them; only administrators can delete records or manage staff accounts. Staff access to a submission is recorded in an access log.' },
       { type: 'p', text: 'We do not use PHI for marketing, and we do not sell it. We will not disclose PHI for any purpose that requires your authorization without first obtaining that authorization in writing, and you may revoke such an authorization at any time.' },
     ],
   },
@@ -257,8 +257,8 @@ const privacySections: Section[] = [
       { type: 'list', items: [
         '**Client care records**: retained for the period required by applicable state and federal law, which for adult clients is commonly a minimum of six to ten years after the last date of service, and for minors is measured from the age of majority.',
         '**Billing and claims records**: retained for the period required by the applicable payer program and by tax law.',
-        '**Website enquiries that do not become clients**: retained for up to 24 months, then deleted.',
-        '**Job applications**: retained for up to 12 months unless you ask us to keep them on file longer.',
+        '**Website enquiries that do not become clients**: retained for up to 24 months after being closed, then deleted.',
+        '**Job applications**: retained for up to 24 months, including any resume you attach, unless you ask us to remove them sooner.',
         '**Newsletter subscriptions**: retained until you unsubscribe.',
       ]},
       { type: 'p', text: 'When a retention period ends, we securely delete or destroy the information.' },
@@ -290,8 +290,8 @@ const privacySections: Section[] = [
       { type: 'p', text: 'We maintain administrative, physical, and technical safeguards appropriate to the sensitivity of the information we hold, including:' },
       { type: 'list', items: [
         'Encryption of data in transit and at rest.',
-        'Role-based access controls that limit each staff member to the information their duties require.',
-        'Audit logging on systems containing health information.',
+        'Role-based access controls separating administrators from other staff, enforced in the database rather than only in the interface.',
+        'An access log recording which staff member opened which submission, and when.',
         'Background checks, confidentiality agreements, and annual privacy training for all staff.',
         'Written Business Associate Agreements with vendors who handle protected health information.',
         'An incident response plan, with breach notification to affected individuals and regulators as required by law.',

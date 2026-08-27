@@ -38,6 +38,7 @@ const config: Record<SubmissionKind, { title: string; subtitle: string; empty: s
 }
 
 const statusFilters: Array<SubmissionStatus | 'all'> = ['all', 'new', 'in_progress', 'closed']
+const PAGE_SIZE = 50
 
 export function Inbox({ kind }: { kind: SubmissionKind }) {
   const meta = config[kind]
@@ -45,6 +46,8 @@ export function Inbox({ kind }: { kind: SubmissionKind }) {
 
   const { id } = useParams()
   const [rows, setRows] = useState<Submission[]>([])
+  const [total, setTotal] = useState(0)
+  const [pageIndex, setPageIndex] = useState(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [status, setStatus] = useState<SubmissionStatus | 'all'>('all')
@@ -53,15 +56,18 @@ export function Inbox({ kind }: { kind: SubmissionKind }) {
   const load = useCallback(async () => {
     setError(null)
     try {
-      // The contact inbox also surfaces newsletter signups.
-      const all = await fetchSubmissions()
-      setRows(all.filter((r) => (kind === 'contact' ? r.kind === 'contact' || r.kind === 'newsletter' : r.kind === kind)))
+      // The contact inbox also surfaces newsletter signups, so it asks for
+      // both kinds rather than filtering a truncated page client-side.
+      const kinds: SubmissionKind[] = kind === 'contact' ? ['contact', 'newsletter'] : [kind]
+      const page = await fetchSubmissions({ kind: kinds, pageSize: PAGE_SIZE, page: pageIndex })
+      setRows(page.rows)
+      setTotal(page.total)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load submissions.')
     } finally {
       setLoading(false)
     }
-  }, [kind])
+  }, [kind, pageIndex])
 
   useEffect(() => {
     setLoading(true)
@@ -176,6 +182,32 @@ export function Inbox({ kind }: { kind: SubmissionKind }) {
           </ul>
         )}
       </Panel>
+
+      {total > PAGE_SIZE && (
+        <div className="mt-5 flex items-center justify-between gap-4">
+          <p className="text-[0.8125rem] text-[color:var(--color-ink-muted)]">
+            Showing {pageIndex * PAGE_SIZE + 1}
+            {'\u2013'}
+            {Math.min((pageIndex + 1) * PAGE_SIZE, total)} of {total}
+          </p>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setPageIndex((i) => Math.max(0, i - 1))}
+              disabled={pageIndex === 0}
+              className="rounded-full border border-[color:var(--color-line)] px-4 py-2 text-[0.8125rem] font-semibold text-[color:var(--color-primary)] transition-colors hover:bg-[color:var(--color-bg-soft)] disabled:opacity-40"
+            >
+              Previous
+            </button>
+            <button
+              onClick={() => setPageIndex((i) => i + 1)}
+              disabled={(pageIndex + 1) * PAGE_SIZE >= total}
+              className="rounded-full border border-[color:var(--color-line)] px-4 py-2 text-[0.8125rem] font-semibold text-[color:var(--color-primary)] transition-colors hover:bg-[color:var(--color-bg-soft)] disabled:opacity-40"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      )}
     </>
   )
 }

@@ -15,8 +15,14 @@ type SubmitInput = {
 
 export async function createSubmission(input: SubmitInput): Promise<void> {
   if (!isSupabaseConfigured) {
-    // Dev fallback so the UI is fully demoable before keys are added.
-    await new Promise((r) => setTimeout(r, 900))
+    // Never silently swallow a real enquiry. Local persistence is a dev-only
+    // convenience; a production build without keys must fail loudly.
+    if (!import.meta.env.DEV) {
+      throw new Error(
+        'This form is temporarily unavailable. Please call us and we will take your details over the phone.',
+      )
+    }
+    await new Promise((r) => setTimeout(r, 700))
     const key = 'premiumcare:pending-submissions'
     const existing = JSON.parse(localStorage.getItem(key) ?? '[]')
     existing.unshift({ ...input, id: crypto.randomUUID(), created_at: new Date().toISOString() })
@@ -47,7 +53,10 @@ export async function createSubmission(input: SubmitInput): Promise<void> {
  * by staff through a short-lived signed URL.
  */
 export async function uploadResume(file: File): Promise<string> {
-  if (!isSupabaseConfigured) return `demo/${file.name}`
+  if (!isSupabaseConfigured) {
+    if (!import.meta.env.DEV) throw new Error('Resume upload is temporarily unavailable.')
+    return `demo/${file.name}`
+  }
 
   const ext = file.name.split('.').pop()?.toLowerCase() ?? 'pdf'
   const safe = file.name.replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 60)
@@ -62,6 +71,12 @@ export async function uploadResume(file: File): Promise<string> {
 }
 
 /** Staff-only, time-limited download link for an uploaded resume. */
+/** Best-effort rollback so a failed application does not orphan its upload. */
+export async function deleteResume(path: string): Promise<void> {
+  if (!isSupabaseConfigured) return
+  await requireSupabase().storage.from('resumes').remove([path]).catch(() => {})
+}
+
 export async function getResumeUrl(path: string, expiresInSeconds = 300): Promise<string> {
   const { data, error } = await requireSupabase()
     .storage.from('resumes')
@@ -72,26 +87,58 @@ export async function getResumeUrl(path: string, expiresInSeconds = 300): Promis
 
 /* ============================== Portal reads ============================= */
 
+export type SubmissionPage = { rows: Submission[]; total: number }
+
 export async function fetchSubmissions(filters: {
-  kind?: SubmissionKind | 'all'
+  kind?: SubmissionKind | SubmissionKind[] | 'all'
   status?: SubmissionStatus | 'all'
   search?: string
-} = {}): Promise<Submission[]> {
+  page?: number
+  pageSize?: number
+} = {}): Promise<SubmissionPage> {
+  const pageSize = filters.pageSize ?? 50
+  const page = filters.page ?? 0
   let q = requireSupabase()
     .from('submissions')
-    .select('*, assignee:profiles!submissions_assigned_to_fkey(id, full_name, email)')
+    // exact count so totals stay correct past PostgREST's max_rows ceiling
+    .select('*, assignee:profiles!submissions_assigned_to_fkey(id, full_name, email)', { count: 'exact' })
     .order('created_at', { ascending: false })
+    .range(page * pageSize, page * pageSize + pageSize - 1)
 
-  if (filters.kind && filters.kind !== 'all') q = q.eq('kind', filters.kind)
+  if (filters.kind && filters.kind !== 'all') {
+    q = Array.isArray(filters.kind) ? q.in('kind', filters.kind) : q.eq('kind', filters.kind)
+  }
   if (filters.status && filters.status !== 'all') q = q.eq('status', filters.status)
   if (filters.search?.trim()) {
     const s = `%${filters.search.trim()}%`
     q = q.or(`name.ilike.${s},email.ilike.${s},subject.ilike.${s},message.ilike.${s}`)
   }
 
-  const { data, error } = await q
+  const { data, error, count } = await q
   if (error) throw new Error(error.message)
-  return (data ?? []) as Submission[]
+  return { rows: (data ?? []) as Submission[], total: count ?? 0 }
+}
+
+/** Counts per kind and status, computed server-side rather than from a page. */
+export async function fetchSubmissionCounts(): Promise<
+  Array<{ kind: SubmissionKind; status: SubmissionStatus; count: number }>
+> {
+  const { data, error } = await requireSupabase().rpc('submission_counts')
+  if (error) throw new Error(error.message)
+  return (data ?? []) as Array<{ kind: SubmissionKind; status: SubmissionStatus; count: number }>
+}
+
+/** Daily submission volume for the dashboard chart, aggregated in Postgres. */
+export async function fetchDailyVolume(days = 14): Promise<Array<{ day: string; count: number }>> {
+  const { data, error } = await requireSupabase().rpc('submission_daily_volume', { p_days: days })
+  if (error) throw new Error(error.message)
+  return (data ?? []) as Array<{ day: string; count: number }>
+}
+
+/** Records that a staff member opened a submission (privacy policy §8). */
+export async function logSubmissionAccess(id: string): Promise<void> {
+  if (!isSupabaseConfigured) return
+  await requireSupabase().rpc('log_submission_access', { p_submission_id: id, p_action: 'view' })
 }
 
 export async function fetchSubmission(id: string): Promise<Submission> {
@@ -162,15 +209,19 @@ export async function createInvite(input: {
   role: UserRole
   full_name?: string
   invited_by: string
-}): Promise<Invite> {
+}): Promise<Invite & { code: string }> {
+  // The plaintext code is shown to the admin once and never stored; only its
+  // SHA-256 hash reaches the database, so a database leak is not a set of
+  // usable invitations.
   const code = generateInviteCode()
+  const code_hash = await sha256Hex(code.toUpperCase())
   const { data, error } = await requireSupabase()
     .from('invites')
     .insert({
       email: input.email.trim().toLowerCase(),
       role: input.role,
       full_name: input.full_name?.trim() || null,
-      code,
+      code_hash,
       invited_by: input.invited_by,
     })
     .select()
@@ -182,7 +233,7 @@ export async function createInvite(input: {
     }
     throw new Error(error.message)
   }
-  return data as Invite
+  return { ...(data as Invite), code }
 }
 
 export async function revokeInvite(id: string): Promise<void> {
@@ -201,6 +252,12 @@ export async function setProfileActive(id: string, is_active: boolean): Promise<
 }
 
 /* ================================ Utils ================================= */
+
+async function sha256Hex(value: string) {
+  const bytes = new TextEncoder().encode(value)
+  const digest = await crypto.subtle.digest('SHA-256', bytes)
+  return Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, '0')).join('')
+}
 
 function generateInviteCode() {
   const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'

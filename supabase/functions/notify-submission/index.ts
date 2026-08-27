@@ -30,6 +30,14 @@ const META: Record<Kind, { label: string; sentence: string; route: string; emoji
   newsletter:  { label: 'Newsletter signup',   sentence: 'Someone has subscribed to the newsletter.',    route: '/portal/contacts',     emoji: '🔔' },
 }
 
+/** Constant-time compare so the secret cannot be recovered by timing. */
+function timingSafeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) return false
+  let diff = 0
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i)
+  return diff === 0
+}
+
 const esc = (v: unknown) =>
   String(v ?? '').replace(/[&<>"']/g, (c) =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!)
@@ -146,9 +154,46 @@ function buildEmail(kind: Kind, createdAt: string) {
   return { subject: `${m.emoji} New ${m.label.toLowerCase()}`, html, text }
 }
 
+const SUPABASE_URL = Deno.env.get('SUPABASE_URL')
+const SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
+
+/** Writes an undelivered notification into the outbox table. */
+async function recordFailure(
+  record: { id?: string; kind?: string },
+  status: number,
+  detail: string,
+) {
+  if (!SUPABASE_URL || !SERVICE_KEY) return
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/notification_failures`, {
+      method: 'POST',
+      headers: {
+        apikey: SERVICE_KEY,
+        Authorization: `Bearer ${SERVICE_KEY}`,
+        'Content-Type': 'application/json',
+        Prefer: 'return=minimal',
+      },
+      body: JSON.stringify({
+        submission_id: record.id ?? null,
+        kind: record.kind ?? null,
+        status_code: status,
+        detail: detail.slice(0, 2000),
+      }),
+    })
+  } catch (e) {
+    console.error('Could not record notification failure', e)
+  }
+}
+
 Deno.serve(async (req) => {
   if (req.method !== 'POST') return new Response('Method not allowed', { status: 405 })
-  if (WEBHOOK_SECRET && req.headers.get('x-webhook-secret') !== WEBHOOK_SECRET) {
+  // Fail CLOSED. A missing secret previously meant every caller was accepted.
+  if (!WEBHOOK_SECRET) {
+    console.error('WEBHOOK_SECRET is not set; refusing all requests')
+    return new Response('Server misconfigured', { status: 503 })
+  }
+  const presented = req.headers.get('x-webhook-secret') ?? ''
+  if (!timingSafeEqual(presented, WEBHOOK_SECRET)) {
     return new Response('Unauthorized', { status: 401 })
   }
   if (!RESEND_API_KEY) {
@@ -156,7 +201,7 @@ Deno.serve(async (req) => {
     return new Response('Email not configured', { status: 500 })
   }
 
-  let record: { kind?: Kind; created_at?: string }
+  let record: { id?: string; kind?: Kind; created_at?: string }
   try {
     const body = await req.json()
     record = body.record ?? body
@@ -175,10 +220,18 @@ Deno.serve(async (req) => {
 
   if (!res.ok) {
     const detail = await res.text()
-    console.error('Resend error', res.status, detail)
-    // 200 so Postgres does not retry a permanent failure forever.
-    return new Response(JSON.stringify({ ok: false, status: res.status, detail }), {
-      status: 200, headers: { 'Content-Type': 'application/json' },
+    // 429 and 5xx are transient and worth retrying; 4xx are permanent.
+    const transient = res.status === 429 || res.status >= 500
+    console.error('Resend error', res.status, transient ? '(transient)' : '(permanent)', detail)
+
+    // Record every failure so an admin can see what was never delivered,
+    // rather than silently dropping it as before.
+    await recordFailure(record, res.status, detail)
+
+    return new Response(JSON.stringify({ ok: false, status: res.status, transient, detail }), {
+      // 5xx tells pg_net's log this was a real failure worth investigating.
+      status: transient ? 503 : 200,
+      headers: { 'Content-Type': 'application/json' },
     })
   }
   return new Response(JSON.stringify({ ok: true }), {

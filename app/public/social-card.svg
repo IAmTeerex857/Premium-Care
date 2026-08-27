@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f2a4d"/>
+      <stop offset="1" stop-color="#1a4175"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#9fd2ec"/>
+      <stop offset="1" stop-color="#f4cf68"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#071b32" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#background)"/>
+  <circle cx="1080" cy="80" r="260" fill="#9fd2ec" opacity="0.08"/>
+  <circle cx="1010" cy="585" r="330" fill="#f4cf68" opacity="0.07"/>
+  <path d="M0 560 C260 500 380 620 650 550 C850 500 1010 505 1200 555 V630 H0Z" fill="#fff" opacity="0.035"/>
+
+  <g transform="translate(790 95)" filter="url(#shadow)">
+    <rect width="300" height="360" rx="44" fill="#fff" opacity="0.98"/>
+    <path d="M150 253 C104 218 53 182 53 124 C53 79 85 54 120 54 C140 54 157 64 171 82 C185 64 202 54 222 54 C257 54 289 79 289 124 C289 182 238 218 192 253 L171 269Z" fill="none" stroke="url(#accent)" stroke-width="22" transform="translate(-21 0)"/>
+    <path d="M70 260 C99 222 123 223 150 246 C177 223 201 222 230 260" fill="none" stroke="#1a4175" stroke-linecap="round" stroke-width="18"/>
+    <circle cx="150" cy="183" r="24" fill="#9fd2ec"/>
+    <path d="M118 230 C118 202 130 187 150 187 C170 187 182 202 182 230" fill="#9fd2ec"/>
+    <text x="150" y="320" text-anchor="middle" fill="#1a4175" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="700" letter-spacing="3">CARE WITH HEART</text>
+  </g>
+
+  <g transform="translate(78 84)">
+    <rect width="80" height="8" rx="4" fill="#f4cf68"/>
+    <text y="84" fill="#fff" font-family="Georgia, 'Times New Roman', serif" font-size="75" font-weight="700">Premium Care</text>
+    <text y="135" fill="#9fd2ec" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="600" letter-spacing="5">COMPASSION. CARE. QUALITY OF LIFE.</text>
+
+    <text y="235" fill="#fff" font-family="Arial, Helvetica, sans-serif" font-size="39" font-weight="700">Personalized care that helps</text>
+    <text y="282" fill="#fff" font-family="Arial, Helvetica, sans-serif" font-size="39" font-weight="700">people live safely at home.</text>
+
+    <text y="360" fill="#dbe9f5" font-family="Arial, Helvetica, sans-serif" font-size="24">In-home care  |  Disability support  |  Skilled nursing</text>
+    <text y="425" fill="#f4cf68" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" letter-spacing="2">HANOVER, MARYLAND</text>
+    <text y="473" fill="#fff" opacity="0.8" font-family="Arial, Helvetica, sans-serif" font-size="21">premiumcareinc.com  |  (240) 437-2218</text>
+  </g>
+</svg>

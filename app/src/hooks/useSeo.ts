@@ -60,8 +60,12 @@ export function useSeo({ title, description, noindex = false }: {
     setMeta('meta[property="og:description"]', 'property', 'og:description', description)
     setMeta('meta[property="og:url"]', 'property', 'og:url', canonical)
     setMeta('meta[property="og:type"]', 'property', 'og:type', 'website')
+    setMeta('meta[property="og:site_name"]', 'property', 'og:site_name', 'Premium Care')
+    setMeta('meta[property="og:image"]', 'property', 'og:image', `${origin}/social-card.png`)
+    setMeta('meta[property="og:image:alt"]', 'property', 'og:image:alt', 'Premium Care, personalized in-home care in Maryland')
     setMeta('meta[name="twitter:card"]', 'name', 'twitter:card', 'summary_large_image')
     setMeta('meta[name="twitter:title"]', 'name', 'twitter:title', title)
     setMeta('meta[name="twitter:description"]', 'name', 'twitter:description', description)
+    setMeta('meta[name="twitter:image"]', 'name', 'twitter:image', `${origin}/social-card.png`)
   }, [title, description, noindex])
 }

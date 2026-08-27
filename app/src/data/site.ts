@@ -14,12 +14,11 @@ export const site = {
   emailHref: 'mailto:info@premiumcareinc.com',
   careersEmail: 'info@premiumcareinc.com',
   address: {
-    line1: '7000 Arundel Mills Circle, Suite 200',
     city: 'Hanover',
     state: 'MD',
-    zip: '21076',
+    stateLong: 'Maryland',
     get full() {
-      return `${this.line1}, ${this.city}, ${this.state} ${this.zip}`
+      return `${this.city}, ${this.stateLong}`
     },
   },
   hours: [

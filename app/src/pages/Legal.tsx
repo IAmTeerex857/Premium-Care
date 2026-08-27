@@ -132,7 +132,7 @@ function LegalPage({ eyebrow, title, lead, updated, effective, sections }: {
                   </li>
                   <li>
                     <span className="font-medium text-[color:var(--color-primary)]">Mail: </span>
-                    {site.name}, {site.address.line1}, {site.address.city}, {site.address.state} {site.address.zip}
+                    {site.name}, {site.address.full}
                   </li>
                 </ul>
               </section>
@@ -473,7 +473,7 @@ const termsSections: Section[] = [
     id: 'governing-law',
     heading: 'Governing law and disputes',
     blocks: [
-      { type: 'p', text: `These Terms are governed by the laws of the State of Maryland, without regard to its conflict-of-laws rules. You agree that the state and federal courts located in ${site.address.city}, ${site.address.state} have exclusive jurisdiction over any dispute arising from these Terms or your use of the Site.` },
+      { type: 'p', text: `These Terms are governed by the laws of the State of Maryland, without regard to its conflict-of-laws rules. You agree that the state and federal courts located in ${site.address.stateLong} have exclusive jurisdiction over any dispute arising from these Terms or your use of the Site.` },
       { type: 'p', text: 'If any provision of these Terms is found unenforceable, that provision will be limited or severed to the minimum extent necessary, and the remaining provisions will stay in full force.' },
     ],
   },

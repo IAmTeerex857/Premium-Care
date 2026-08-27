@@ -31,7 +31,7 @@ export default function Contact() {
               {[
                 { icon: Phone, label: 'Phone', value: site.phoneDisplay, href: site.phoneHref, note: site.emergencyNote },
                 { icon: Mail, label: 'Email', value: site.email, href: site.emailHref, note: 'We reply within one business day' },
-                { icon: MapPin, label: 'Office', value: `${site.address.line1}, ${site.address.city}, ${site.address.state} ${site.address.zip}`, note: 'Visits by appointment' },
+                { icon: MapPin, label: 'Office', value: site.address.full, note: 'Serving Maryland statewide' },
               ].map((row) => (
                 <div key={row.label} className="flex items-start gap-4">
                   <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-[color:var(--color-accent)]/10 text-[color:var(--color-accent)]">

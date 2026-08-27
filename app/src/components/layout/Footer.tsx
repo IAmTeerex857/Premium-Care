@@ -155,7 +155,7 @@ export function Footer() {
               </li>
               <li className="flex items-start gap-3 text-white/70">
                 <MapPin size={16} className="mt-1 shrink-0 text-[color:var(--color-sky)]" />
-                <span>{site.address.line1}<br />{site.address.city}, {site.address.state} {site.address.zip}</span>
+                <span>{site.address.full}</span>
               </li>
               <li className="flex items-start gap-3 text-white/70">
                 <Clock size={16} className="mt-1 shrink-0 text-[color:var(--color-sky)]" />

@@ -176,7 +176,6 @@ const privacySections: Section[] = [
         '**Care information**: the needs you describe, including diagnoses, mobility, cognition, current supports, medications, and safety concerns.',
         '**Scheduling preferences**: preferred dates, times, and the services you are interested in.',
         '**Insurance and funding information**: your funding source, member or policy identifiers, and information needed to verify benefits on your behalf.',
-        '**Referral information**: when a professional refers a client, the referrer’s details and the client information they provide.',
         '**Employment information**: for job applicants: work history, certifications, licenses, availability, and anything else submitted through our careers page.',
       ]},
       { type: 'sub', text: 'Information we create in the course of care' },
@@ -368,7 +367,7 @@ const termsSections: Section[] = [
   },
   {
     id: 'enquiries',
-    heading: 'Enquiries, bookings, and referrals',
+    heading: 'Enquiries and bookings',
     blocks: [
       { type: 'p', text: 'Submitting a form on this Site is a **request for contact**. It is not a booking, not an acceptance of you as a client, and not a commitment by either party. Specifically:' },
       { type: 'list', items: [
@@ -376,7 +375,7 @@ const termsSections: Section[] = [
         'We may decline to accept a prospective client where the needs described fall outside our clinical scope, our service area, or our current capacity.',
         'Care begins only after an assessment has been completed and a written Service Agreement and Care Plan have been signed by both parties.',
       ]},
-      { type: 'p', text: 'If you submit a **referral** on behalf of another person, you represent that you have that person’s consent, or the consent of their authorized representative, to share their information with us and for us to contact them directly.' },
+      { type: 'p', text: 'If you contact us **on behalf of another person**, you represent that you have that person’s consent, or the consent of their authorized representative, to share their information with us and for us to contact them directly.' },
     ],
   },
   {

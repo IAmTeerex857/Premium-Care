@@ -3,7 +3,7 @@ import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
   Briefcase, CalendarCheck, ExternalLink, LayoutDashboard, LogOut, Mail,
-  Menu, Share2, Users, X, type LucideIcon,
+  Menu, Users, X, type LucideIcon,
 } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
 import { cn, initials } from '@/lib/utils'
@@ -15,7 +15,6 @@ const navItems: NavItem[] = [
   { to: '/portal', label: 'Dashboard', icon: LayoutDashboard, end: true },
   { to: '/portal/bookings', label: 'Appointments', icon: CalendarCheck },
   { to: '/portal/contacts', label: 'Messages', icon: Mail },
-  { to: '/portal/referrals', label: 'Referrals', icon: Share2 },
   { to: '/portal/applications', label: 'Applications', icon: Briefcase },
   { to: '/portal/team', label: 'Team', icon: Users, adminOnly: true },
 ]

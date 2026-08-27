@@ -115,11 +115,6 @@ export function Footer() {
                   </Link>
                 </li>
               ))}
-              <li>
-                <Link to="/referral" className="inline-block text-white/70 transition-all duration-200 hover:translate-x-0.5 hover:text-[color:var(--color-sky)]">
-                  Make a Referral
-                </Link>
-              </li>
             </ul>
           </div>
 

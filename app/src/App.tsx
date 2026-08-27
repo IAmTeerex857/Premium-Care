@@ -14,7 +14,6 @@ const Services = lazy(() => import('@/pages/Services'))
 const ServiceDetail = lazy(() => import('@/pages/ServiceDetail'))
 const Careers = lazy(() => import('@/pages/Careers'))
 const Contact = lazy(() => import('@/pages/Contact'))
-const Referral = lazy(() => import('@/pages/Referral'))
 const NotFound = lazy(() => import('@/pages/NotFound'))
 
 /* Portal */
@@ -41,7 +40,6 @@ export default function App() {
               <Route path="services/:slug" element={<ServiceDetail />} />
               <Route path="careers" element={<Careers />} />
               <Route path="contact" element={<Contact />} />
-              <Route path="referral" element={<Referral />} />
               <Route path="privacy-policy" element={<PrivacyPolicy />} />
               <Route path="terms-of-service" element={<TermsOfService />} />
               <Route path="*" element={<NotFound />} />
@@ -61,8 +59,6 @@ export default function App() {
                 <Route path="contacts" element={<Inbox kind="contact" />} />
                 <Route path="contacts/:id" element={<Inbox kind="contact" />} />
 
-                <Route path="referrals" element={<Inbox kind="referral" />} />
-                <Route path="referrals/:id" element={<Inbox kind="referral" />} />
 
                 <Route path="applications" element={<Inbox kind="application" />} />
                 <Route path="applications/:id" element={<Inbox kind="application" />} />

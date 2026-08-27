@@ -100,7 +100,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectHTMLAttributes<HTMLSel
   },
 )
 
-/** Checkbox row used by the referral multi-select. */
+/** Checkbox row used by multi-select groups such as shift preferences. */
 export function CheckboxPill({
   checked, onChange, label,
 }: { checked: boolean; onChange: (v: boolean) => void; label: string }) {

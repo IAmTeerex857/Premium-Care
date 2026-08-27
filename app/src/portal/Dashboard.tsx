@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
-  BarChart3, Briefcase, CalendarCheck, Inbox, Mail, Share2, TrendingUp, type LucideIcon,
+  BarChart3, Briefcase, CalendarCheck, Inbox, Mail, TrendingUp, type LucideIcon,
 } from 'lucide-react'
 import { fetchSubmissions, subscribeToSubmissions } from '@/lib/api'
 import { useAuth } from '@/lib/auth'
@@ -15,7 +15,6 @@ import { useSeo } from '@/hooks/useSeo'
 const tiles: { kind: SubmissionKind; label: string; to: string; icon: LucideIcon }[] = [
   { kind: 'booking', label: 'Appointments', to: '/portal/bookings', icon: CalendarCheck },
   { kind: 'contact', label: 'Messages', to: '/portal/contacts', icon: Mail },
-  { kind: 'referral', label: 'Referrals', to: '/portal/referrals', icon: Share2 },
   { kind: 'application', label: 'Applications', to: '/portal/applications', icon: Briefcase },
 ]
 

@@ -20,7 +20,7 @@ export default function About() {
     <>
       <PageHero
         eyebrow="About us"
-        title="We are here because of you"
+        title="Compassion. Care. Quality of Life."
         lead="Premium Care was founded by a nurse who spent two decades watching families settle for care that did not fit them. We built the alternative."
       />
 

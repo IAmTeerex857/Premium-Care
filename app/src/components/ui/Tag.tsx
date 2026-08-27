@@ -3,12 +3,10 @@ import { cn } from '@/lib/utils'
 /** Section eyebrow pill, spec §9.3. */
 export function Tag({
   children,
-  dot = true,
   tone = 'light',
   className,
 }: {
   children: React.ReactNode
-  dot?: boolean
   tone?: 'light' | 'dark'
   className?: string
 }) {
@@ -22,12 +20,6 @@ export function Tag({
         className,
       )}
     >
-      {dot && (
-        <span
-          className="size-1.5 rounded-full bg-[color:var(--color-accent)]"
-          style={{ animation: 'dot-pulse 2s ease-in-out infinite' }}
-        />
-      )}
       {children}
     </span>
   )

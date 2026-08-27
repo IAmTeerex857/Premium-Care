@@ -39,6 +39,37 @@ export async function createSubmission(input: SubmitInput): Promise<void> {
   if (error) throw new Error(error.message)
 }
 
+/* ============================== Resume upload ============================ */
+
+/**
+ * Uploads a resume to the private `resumes` bucket and returns its path.
+ * Anonymous visitors may write but never read, so the file is only reachable
+ * by staff through a short-lived signed URL.
+ */
+export async function uploadResume(file: File): Promise<string> {
+  if (!isSupabaseConfigured) return `demo/${file.name}`
+
+  const ext = file.name.split('.').pop()?.toLowerCase() ?? 'pdf'
+  const safe = file.name.replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 60)
+  const path = `${new Date().getFullYear()}/${crypto.randomUUID()}-${safe}`.replace(/\.[^.]*$/, `.${ext}`)
+
+  const { error } = await requireSupabase()
+    .storage.from('resumes')
+    .upload(path, file, { contentType: file.type || undefined, upsert: false })
+
+  if (error) throw new Error(`Could not upload your resume: ${error.message}`)
+  return path
+}
+
+/** Staff-only, time-limited download link for an uploaded resume. */
+export async function getResumeUrl(path: string, expiresInSeconds = 300): Promise<string> {
+  const { data, error } = await requireSupabase()
+    .storage.from('resumes')
+    .createSignedUrl(path, expiresInSeconds)
+  if (error) throw new Error(error.message)
+  return data.signedUrl
+}
+
 /* ============================== Portal reads ============================= */
 
 export async function fetchSubmissions(filters: {

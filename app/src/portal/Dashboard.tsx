@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
-  Briefcase, CalendarCheck, Inbox, Mail, Share2, TrendingUp, type LucideIcon,
+  BarChart3, Briefcase, CalendarCheck, Inbox, Mail, Share2, TrendingUp, type LucideIcon,
 } from 'lucide-react'
 import { fetchSubmissions, subscribeToSubmissions } from '@/lib/api'
 import { useAuth } from '@/lib/auth'
@@ -183,27 +183,42 @@ export default function Dashboard() {
                 {series.reduce((a, d) => a + d.count, 0)} submissions received
               </p>
 
-              <div className="mt-7 flex h-40 items-end gap-1.5" role="img" aria-label="Bar chart of submissions received per day over the last 14 days">
-                {series.map((d) => (
-                  <div key={d.date} className="group relative flex flex-1 flex-col items-center justify-end">
-                    <span className="pointer-events-none absolute -top-7 rounded-md bg-[color:var(--color-primary-dark)] px-2 py-1 text-[0.6875rem] font-medium text-white opacity-0 transition-opacity group-hover:opacity-100">
-                      {d.count}
-                    </span>
-                    <div
-                      className={cn(
-                        'w-full rounded-t-[3px] transition-all duration-500 [transition-timing-function:var(--ease-premium)]',
-                        d.count > 0 ? 'bg-[color:var(--color-accent)]' : 'bg-[color:var(--color-line)]',
-                      )}
-                      style={{ height: `${Math.max((d.count / peak) * 100, 3)}%` }}
-                    />
+              {series.every((d) => d.count === 0) ? (
+                <div className="mt-6 flex h-40 flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[color:var(--color-line)] text-center">
+                  <BarChart3 size={22} className="text-[color:var(--color-ink-muted)]" />
+                  <p className="text-[0.875rem] font-medium text-[color:var(--color-ink-secondary)]">No submissions yet</p>
+                  <p className="max-w-[16rem] text-[0.75rem] leading-relaxed text-[color:var(--color-ink-muted)]">
+                    Daily volume will chart here as enquiries come in from the website.
+                  </p>
+                </div>
+              ) : (
+                <>
+                  <div className="mt-7 flex h-40 items-end gap-1.5" role="img" aria-label={`Submissions per day for the last 14 days. Busiest day: ${peak}.`}>
+                    {series.map((d) => (
+                      <div key={d.date} className="group relative flex flex-1 flex-col items-center justify-end">
+                        <span className="pointer-events-none absolute -top-7 z-10 whitespace-nowrap rounded-md bg-[color:var(--color-primary-dark)] px-2 py-1 text-[0.6875rem] font-medium text-white opacity-0 transition-opacity group-hover:opacity-100">
+                          {d.count} on {formatDate(d.date, { month: 'short', day: 'numeric' })}
+                        </span>
+                        <div
+                          className={cn(
+                            'w-full rounded-t-[3px] transition-all duration-500 [transition-timing-function:var(--ease-premium)]',
+                            d.count > 0
+                              ? 'bg-[color:var(--color-primary-light)] group-hover:bg-[color:var(--color-primary)]'
+                              : 'bg-[color:var(--color-line)]',
+                          )}
+                          style={{ height: `${Math.max((d.count / peak) * 100, 3)}%` }}
+                        />
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
 
-              <div className="mt-3 flex justify-between text-[0.6875rem] text-[color:var(--color-ink-muted)]">
-                <span>{formatDate(series[0]!.date, { month: 'short', day: 'numeric' })}</span>
-                <span>Today</span>
-              </div>
+                  <div className="mt-3 flex justify-between text-[0.6875rem] text-[color:var(--color-ink-muted)]">
+                    <span>{formatDate(series[0]!.date, { month: 'short', day: 'numeric' })}</span>
+                    <span>Busiest day: {peak}</span>
+                    <span>Today</span>
+                  </div>
+                </>
+              )}
             </Panel>
           </div>
         </>

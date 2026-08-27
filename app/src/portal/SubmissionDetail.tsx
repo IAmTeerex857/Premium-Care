@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Mail, Phone, Send, Trash2 } from 'lucide-react'
+import { ArrowLeft, Download, Mail, Phone, Send, Trash2 } from 'lucide-react'
 import {
-  addNote, deleteSubmission, fetchNotes, fetchProfiles, fetchSubmission, updateSubmission,
+  addNote, deleteSubmission, fetchNotes, fetchProfiles, fetchSubmission, getResumeUrl, updateSubmission,
 } from '@/lib/api'
 import { useAuth } from '@/lib/auth'
 import type { Profile, Submission, SubmissionKind, SubmissionNote, SubmissionStatus } from '@/lib/types'
@@ -154,16 +154,28 @@ export function SubmissionDetail({ id, kind, onChanged }: {
               </div>
             )}
 
+            {typeof row.payload?.resume_path === 'string' && (
+              <div className="mt-6">
+                <p className="t-label mb-2">Resume</p>
+                <ResumeLink
+                  path={row.payload.resume_path as string}
+                  filename={(row.payload.resume_filename as string) ?? 'resume'}
+                />
+              </div>
+            )}
+
             {Object.keys(row.payload ?? {}).length > 0 && (
               <div className="mt-5">
                 <p className="t-label mb-3">Submitted details</p>
                 <dl className="grid gap-x-6 gap-y-3 sm:grid-cols-2">
-                  {flatten(row.payload).map(([k, v]) => (
+                  {flatten(row.payload)
+                    .filter(([k]) => !/^Resume (Path|Filename)$/.test(k))
+                    .map(([k, v]) => (
                     <div key={k} className="border-b border-[color:var(--color-line)] pb-2">
                       <dt className="text-[0.75rem] font-semibold uppercase tracking-wide text-[color:var(--color-ink-muted)]">{humanize(k)}</dt>
                       <dd className="mt-1 text-[0.9375rem] text-[color:var(--color-ink)]">{v}</dd>
                     </div>
-                  ))}
+                    ))}
                 </dl>
               </div>
             )}
@@ -297,4 +309,38 @@ function flatten(payload: Record<string, unknown>, prefix = ''): Array<[string, 
 
 function humanize(key: string) {
   return key.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+}
+
+/** Fetches a short-lived signed URL only when staff actually asks for it. */
+function ResumeLink({ path, filename }: { path: string; filename: string }) {
+  const [busy, setBusy] = useState(false)
+  const [err, setErr] = useState<string | null>(null)
+
+  async function open() {
+    setBusy(true); setErr(null)
+    try {
+      const url = await getResumeUrl(path)
+      window.open(url, '_blank', 'noopener')
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : 'Could not open the resume.')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <div className="flex flex-col gap-2">
+      <button
+        onClick={() => void open()}
+        disabled={busy}
+        className="inline-flex w-fit items-center gap-2 rounded-full border border-[color:var(--color-line)] px-4 py-2.5 text-[0.875rem] font-semibold text-[color:var(--color-primary)] transition-colors hover:bg-[color:var(--color-bg-soft)] disabled:opacity-60"
+      >
+        <Download size={15} /> {busy ? 'Preparing...' : filename}
+      </button>
+      {err && <p className="text-[0.8125rem] text-[color:var(--color-warm)]">{err}</p>}
+      <p className="text-[0.75rem] text-[color:var(--color-ink-muted)]">
+        Opens a private link that expires after 5 minutes.
+      </p>
+    </div>
+  )
 }

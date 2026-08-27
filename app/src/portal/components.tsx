@@ -40,9 +40,9 @@ export function StatusBadge({ status }: { status: SubmissionStatus }) {
 }
 
 const kindStyles: Record<SubmissionKind, string> = {
-  booking: 'bg-[#E2F1F9] text-[#1A4175]',
-  contact: 'bg-[#EAF0FA] text-[#2F4A80]',
-  referral: 'bg-[#DFF0F8] text-[#0F2A4D]',
+  booking: 'bg-[#E3ECF8] text-[#1A4175]',
+  contact: 'bg-[#E8ECF7] text-[#33477A]',
+  referral: 'bg-[#DDE6F5] text-[#0F2A4D]',
   application: 'bg-[#FAF4E6] text-[#896B24]',
   newsletter: 'bg-[color:var(--color-bg-soft)] text-[color:var(--color-ink-secondary)]',
 }

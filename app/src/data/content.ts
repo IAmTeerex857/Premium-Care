@@ -178,27 +178,6 @@ export const faqs = [
 ] as const
 
 /* ---------------- Careers ---------------- */
-export const jobOpenings = [
-  { id: 'hha-hanover', title: 'Home Health Aide (HHA)', type: 'Full-time', location: 'Hanover, MD',
-    dept: 'Direct Care', pay: '$21 - $26 / hour',
-    blurb: 'Deliver personal care and daily living support to clients in their homes. Certification required; we pay for recertification.' },
-  { id: 'cna-columbia', title: 'Certified Nursing Assistant (CNA)', type: 'Full-time', location: 'Columbia, MD',
-    dept: 'Direct Care', pay: '$23 - $28 / hour',
-    blurb: 'Hands-on clinical support under RN supervision, with a consistent client roster rather than a rotating schedule.' },
-  { id: 'rn-field', title: 'Registered Nurse, Field', type: 'Full-time', location: 'Maryland',
-    dept: 'Clinical', pay: '$78,000 - $95,000 / year',
-    blurb: 'Own a caseload of skilled nursing clients, run assessments, and supervise aide teams in the field.' },
-  { id: 'companion-pt', title: 'Companion Caregiver', type: 'Part-time', location: 'Hanover, MD',
-    dept: 'Direct Care', pay: '$19 - $23 / hour',
-    blurb: 'Companionship, light help, and outings. No certification required, we train. Ideal for students and retirees.' },
-  { id: 'coordinator', title: 'Care Coordinator', type: 'Full-time', location: 'Hanover, MD (Hybrid)',
-    dept: 'Operations', pay: '$58,000 - $68,000 / year',
-    blurb: 'Be the single point of contact for a portfolio of families, managing schedules, benefits, and provider communication.' },
-  { id: 'scheduler', title: 'Staffing Scheduler', type: 'Full-time', location: 'Hanover, MD',
-    dept: 'Operations', pay: '$50,000 - $60,000 / year',
-    blurb: 'Match caregivers to shifts, handle call-outs, and keep continuity intact. Fast-paced and genuinely important.' },
-] as const
-
 export const benefits = [
   { icon: 'banknote', title: 'Pay that reflects the work', body: 'Above-market hourly rates, guaranteed overtime, and paid travel time between clients.' },
   { icon: 'heart-pulse', title: 'Real health coverage', body: 'Medical, dental, and vision from day 31 for anyone working 30+ hours a week.' },

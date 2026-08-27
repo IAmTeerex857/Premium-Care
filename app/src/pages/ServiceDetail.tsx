@@ -44,7 +44,7 @@ export default function ServiceDetail() {
               <h1 className="t-h1 text-[color:var(--color-primary-dark)]">{service.title}</h1>
               <p className="t-lead max-w-[36rem]">{service.summary}</p>
               <div className="mt-2 flex flex-wrap gap-2">
-                {service.goodFor.map((g) => <Tag key={g} dot={false}>{g}</Tag>)}
+                {service.goodFor.map((g) => <Tag key={g}>{g}</Tag>)}
               </div>
             </Reveal>
 

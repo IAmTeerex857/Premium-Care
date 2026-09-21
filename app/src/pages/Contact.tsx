@@ -1,8 +1,8 @@
-import { Clock, Mail, MapPin, Phone } from 'lucide-react'
+import { Check, Clock, Mail, MapPin, Phone } from 'lucide-react'
 import { PageHero } from '@/components/layout/SiteLayout'
 import { ContactForm } from '@/components/sections/ContactForm'
 import { BookingForm } from '@/components/sections/BookingForm'
-import { site } from '@/data/site'
+import { serviceAreas, site } from '@/data/site'
 import { SectionHeading } from '@/components/ui/Misc'
 import { Reveal } from '@/components/ui/Reveal'
 import { useSeo } from '@/hooks/useSeo'
@@ -92,6 +92,41 @@ export default function Contact() {
               </div>
             </div>
           </Reveal>
+        </div>
+      </section>
+
+      <section className="section bg-[color:var(--color-bg-soft)]">
+        <div className="shell">
+          <SectionHeading
+            tag="Service area"
+            title="Serving 24 Maryland jurisdictions"
+            lead="Our coverage is organized across four Maryland regional offices. Find your county below."
+          />
+          <div className="mt-12 grid gap-5 md:grid-cols-2">
+            {serviceAreas.map((region, index) => (
+              <Reveal key={region.abbreviation} delay={index * 0.06}>
+                <article className="h-full rounded-2xl border border-[color:var(--color-line)] bg-white p-6 shadow-[0_10px_32px_-24px_rgba(15,42,61,0.3)] md:p-7">
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div>
+                      <p className="t-label text-[color:var(--color-accent)]">{region.abbreviation}</p>
+                      <h3 className="t-h4 mt-1 text-[1.125rem]">{region.name}</h3>
+                    </div>
+                    <span className="rounded-full bg-[color:var(--color-primary-light)]/10 px-3 py-1 text-[0.75rem] font-semibold text-[color:var(--color-primary)]">
+                      {region.countLabel}
+                    </span>
+                  </div>
+                  <ul className="mt-5 grid gap-2 sm:grid-cols-2">
+                    {region.counties.map((county) => (
+                      <li key={county} className="flex items-start gap-2 text-[0.875rem] text-[color:var(--color-ink-secondary)]">
+                        <Check size={15} className="mt-0.5 shrink-0 text-[color:var(--color-accent)]" strokeWidth={2.5} />
+                        {county}
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 

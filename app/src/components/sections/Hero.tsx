@@ -71,7 +71,7 @@ export function Hero() {
           <div className="overflow-hidden rounded-[1.25rem] shadow-[0_24px_80px_-20px_rgba(15,42,61,0.28)]">
             <img
               src={img.hero}
-              alt="A caregiver sitting with a client in a bright living room, sharing a conversation"
+              alt="A caregiver in teal scrubs helping an older client move safely through her living room"
               width={1600} height={900} loading="eager" fetchPriority="high"
               className="aspect-[16/9] w-full object-cover"
             />

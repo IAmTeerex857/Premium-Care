@@ -58,7 +58,7 @@ export const missionTabs = [
     points: [
       'Free in-home assessment within 48 hours',
       'Caregiver matching on both clinical fit and personality',
-      'Scheduled plan reviews and 24/7 escalation',
+      'Scheduled plan reviews and responsive office-hour support',
     ],
     image: img.aboutStory,
   },
@@ -125,7 +125,7 @@ export const processSteps = [
   {
     step: '05',
     title: 'Ongoing support',
-    body: 'Scheduled plan reviews, supervisory visits, and a 24/7 line. The plan changes as the needs change.',
+    body: 'Scheduled plan reviews, supervisory visits, and responsive office-hour support. The plan changes as the needs change.',
   },
 ] as const
 
@@ -173,7 +173,7 @@ export const faqs = [
   },
   {
     q: 'What areas do you serve?',
-    a: 'Anne Arundel, Howard, Baltimore, Montgomery, and Prince George’s counties, plus Baltimore City and the surrounding Maryland communities. Call us if you are just outside that range. We can often still help or refer you to someone reputable who can.',
+    a: 'We serve 24 jurisdictions across the Central Maryland, Southern Maryland, Eastern Shore, and Western Maryland regions. See the full county-by-county coverage list on our Contact page.',
   },
 ] as const
 
@@ -184,5 +184,5 @@ export const benefits = [
   { icon: 'graduation-cap', title: 'Paid training & certification', body: 'We cover HHA and CNA certification, recertification, and continuing education hours.' },
   { icon: 'calendar-check', title: 'Schedules you control', body: 'Set your availability. We build around it instead of asking you to build around us.' },
   { icon: 'trending-up', title: 'Somewhere to go', body: 'Clear advancement from aide to senior aide to coordinator, with the training paid for.' },
-  { icon: 'users-round', title: 'Support behind you', body: '24/7 clinical on-call, a named supervisor, and monthly team check-ins that are not performative.' },
+  { icon: 'users-round', title: 'Support behind you', body: 'A named supervisor, responsive weekday support, and monthly team check-ins that are not performative.' },
 ] as const

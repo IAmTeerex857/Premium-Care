@@ -39,7 +39,7 @@ export default function Careers() {
         <div className="shell grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
           <Reveal>
             <div className="overflow-hidden rounded-[1.25rem] shadow-[0_20px_60px_-24px_rgba(15,42,77,0.32)]">
-              <img src={img.careers} alt="Premium Care team members in a training session" loading="lazy" className="aspect-[4/3] w-full object-cover" />
+              <img src={img.careers} alt="A home care professional and client preparing a healthy meal together" loading="lazy" className="aspect-[4/3] w-full object-cover" />
             </div>
           </Reveal>
           <Reveal delay={0.1} className="flex flex-col gap-5">

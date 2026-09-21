@@ -352,7 +352,7 @@ const termsSections: Section[] = [
     blocks: [
       { type: 'p', text: '**If you are experiencing a medical emergency, call 911 immediately.**' },
       { type: 'p', text: 'This Site is not monitored continuously. Do not use a web form, an email address, or any other feature of this Site to report an emergency, a suspected stroke or heart attack, a fall, a medication error, thoughts of self-harm, or any other urgent situation. Messages submitted through this Site may not be read until the next business day.' },
-      { type: 'p', text: 'Existing clients with an urgent concern should call our 24/7 on-call line rather than using this Site.' },
+      { type: 'p', text: 'Existing clients with an urgent concern should call us during office hours, Monday through Friday from 9:00 AM to 5:00 PM ET, rather than using this Site.' },
     ],
   },
   {

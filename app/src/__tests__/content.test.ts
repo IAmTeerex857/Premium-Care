@@ -5,7 +5,7 @@ import { img } from '@/data/images'
 
 describe('site configuration', () => {
   it('uses the Maryland contact details', () => {
-    expect(site.phoneHref).toBe('tel:+12404372218')
+    expect(site.phoneHref).toBe('tel:+14439834222')
     expect(site.email).toBe('info@premiumcareinc.com')
     expect(site.address.full).toBe('Hanover, Maryland')
   })

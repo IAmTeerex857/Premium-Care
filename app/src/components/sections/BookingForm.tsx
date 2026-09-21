@@ -62,8 +62,8 @@ export function BookingForm({ compact = false }: { compact?: boolean }) {
         </motion.span>
         <h3 className="t-h3">Request received</h3>
         <p className="max-w-[26rem] text-[0.9375rem] leading-relaxed text-[color:var(--color-ink-secondary)]">
-          A care manager will call you within one business day to confirm your appointment. If it is urgent,
-          call us directly and we will pick up.
+          A care manager will call you within one business day to confirm your appointment. For urgent questions
+          during office hours, call us directly.
         </p>
         <Button variant="secondary" size="sm" onClick={() => setState('idle')}>
           Submit another request
@@ -103,9 +103,9 @@ export function BookingForm({ compact = false }: { compact?: boolean }) {
         <Input label="Preferred date" type="date" min={localDateValue()} required error={errors.date?.message} {...register('date')} />
         <Select label="Preferred time" required error={errors.time?.message} {...register('time')}>
           <option value="">Select a time…</option>
-          <option value="Morning (8am - 12pm)">Morning (8am - 12pm)</option>
+          <option value="Morning (9am - 12pm)">Morning (9am - 12pm)</option>
           <option value="Afternoon (12pm - 4pm)">Afternoon (12pm - 4pm)</option>
-          <option value="Late afternoon (4pm - 6pm)">Late afternoon (4pm - 6pm)</option>
+          <option value="Late afternoon (4pm - 5pm)">Late afternoon (4pm - 5pm)</option>
         </Select>
       </div>
 

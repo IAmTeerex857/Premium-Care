@@ -5,18 +5,18 @@ export const img = {
   hero: care('hero-home-care'),
   heroPortrait: care('community-support'),
 
-  aboutStory: care('medication-support'),
-  aboutTeam: care('community-support'),
-  mission: care('companion-care'),
+  aboutStory: care('care-coordination'),
+  aboutTeam: care('garden-companionship'),
+  mission: care('mission-home-care'),
 
   services: {
     'in-home-care': care('hero-home-care'),
     'personal-care': care('personal-care'),
     'companion-care': care('companion-care'),
-    'respite-care': care('meal-support'),
-    'skilled-nursing': care('medication-support'),
+    'respite-care': care('respite-family'),
+    'skilled-nursing': care('skilled-nursing-home'),
     'disability-support': care('community-support'),
-    'care-coordination': care('medication-support'),
+    'care-coordination': care('care-coordination'),
     'transportation': care('transportation'),
   } as Record<string, string>,
 
@@ -35,6 +35,6 @@ export const img = {
     michael: care('community-support'),
   },
 
-  careers: care('meal-support'),
+  careers: care('caregiver-training'),
   cta: care('transportation'),
 }

@@ -9,8 +9,6 @@ import { Logo } from './Logo'
 import { Button, ArrowIcon } from '@/components/ui/Button'
 import { SubmitStatus, type SubmitState } from '@/components/ui/Misc'
 
-const socialIcons = { instagram: InstagramIcon }
-
 function NewsletterForm() {
   const [email, setEmail] = useState('')
   const [state, setState] = useState<SubmitState>('idle')
@@ -60,6 +58,7 @@ function NewsletterForm() {
 
 export function Footer() {
   const year = new Date().getFullYear()
+  const instagram = site.socials.find((social) => social.icon === 'instagram')
 
   return (
     <footer data-modal-background className="relative overflow-hidden bg-[color:var(--color-primary-dark)] text-white/85">
@@ -77,31 +76,23 @@ export function Footer() {
             <p className="max-w-[22rem] text-[0.9375rem] leading-relaxed text-white/70">
               {site.description}
             </p>
-            <a
-              href={site.socials.find((s) => s.icon === 'instagram')!.href}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="inline-flex w-fit items-center gap-2 text-[0.875rem] font-medium text-[color:var(--color-sky)] transition-colors hover:text-[color:var(--color-gold)]"
-            >
-              <InstagramIcon size={15} /> @premiumcareinc
-            </a>
-            <div className="flex gap-2.5">
-              {site.socials.map((s) => {
-                const Icon = socialIcons[s.icon as keyof typeof socialIcons]
-                return (
-                  <a
-                    key={s.label}
-                    href={s.href}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    aria-label={s.label}
-                    className="grid place-items-center size-10 rounded-full border border-white/12 text-white/70 transition-all duration-300 [transition-timing-function:var(--ease-premium)] hover:scale-110 hover:border-[color:var(--color-sky)] hover:bg-[color:var(--color-sky)] hover:text-[color:var(--color-primary-dark)]"
-                  >
-                    <Icon size={17} />
-                  </a>
-                )
-              })}
-            </div>
+            {instagram && (
+              <a
+                href={instagram.href}
+                target="_blank"
+                rel="noreferrer noopener"
+                aria-label="Follow Premium Care on Instagram"
+                className="group inline-flex w-fit items-center gap-3 rounded-full border border-white/15 bg-white/[0.05] py-2 pl-2 pr-4 text-white/75 transition-all duration-300 hover:border-[#d946ef]/55 hover:bg-white/[0.09] hover:text-white"
+              >
+                <span className="grid size-9 place-items-center rounded-full bg-[linear-gradient(135deg,#f59e0b,#ec4899_48%,#8b5cf6)] text-white shadow-[0_5px_16px_-7px_rgba(236,72,153,0.9)] transition-transform duration-300 group-hover:scale-105">
+                  <InstagramIcon size={19} />
+                </span>
+                <span className="text-[0.8125rem] leading-tight">
+                  <span className="block text-[0.6875rem] uppercase tracking-[0.12em] text-white/45">Follow us</span>
+                  <span className="font-semibold text-[color:var(--color-sky)]">@premiumcareinc</span>
+                </span>
+              </a>
+            )}
           </div>
 
           {/* Quick links */}

@@ -7,7 +7,7 @@ describe('site configuration', () => {
   it('uses the Maryland contact details', () => {
     expect(site.phoneHref).toBe('tel:+14439834222')
     expect(site.email).toBe('info@premiumcareinc.com')
-    expect(site.address.full).toBe('Hanover, Maryland')
+    expect(site.address.full).toBe('10320 Little Patuxent Parkway, Suite 200, Columbia, MD 21044')
   })
 
   it('exposes only Instagram as a social link', () => {

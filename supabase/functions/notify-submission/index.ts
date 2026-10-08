@@ -124,7 +124,7 @@ function buildEmail(kind: Kind, createdAt: string) {
           <p style="margin:0;font-size:13px;line-height:1.6;color:#5E7087;">
             <strong style="color:#1A4175;">Premium Care</strong><br>
             Compassion. Care. Quality of Life.<br>
-            Hanover, Maryland &nbsp;&middot;&nbsp; +1 (240) 437-2218
+            10320 Little Patuxent Parkway, Suite 200, Columbia, MD 21044 &nbsp;&middot;&nbsp; +1 (240) 437-2218
           </p>
           <p style="margin:12px 0 0;font-size:12px;color:#8494A6;">
             Automated notification from premiumcareinc.com
@@ -148,7 +148,7 @@ function buildEmail(kind: Kind, createdAt: string) {
     'For privacy, the details are not included in this email.',
     'Sign in to the portal to read the full submission.',
     '',
-    'Premium Care, Hanover, Maryland, +1 (240) 437-2218',
+    'Premium Care, 10320 Little Patuxent Parkway, Suite 200, Columbia, MD 21044, +1 (240) 437-2218',
   ].join('\n')
 
   return { subject: `${m.emoji} New ${m.label.toLowerCase()}`, html, text }

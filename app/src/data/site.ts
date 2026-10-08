@@ -14,13 +14,11 @@ export const site = {
   emailHref: 'mailto:info@premiumcareinc.com',
   careersEmail: 'info@premiumcareinc.com',
   address: {
-    street: '10320 Little Patuxent Parkway, Suite 200',
-    city: 'Columbia',
+    city: 'Hanover',
     state: 'MD',
     stateLong: 'Maryland',
-    zip: '21044',
     get full() {
-      return `${this.street}, ${this.city}, ${this.state} ${this.zip}`
+      return `${this.city}, ${this.stateLong}`
     },
   },
   hours: [{ days: 'Monday - Friday', time: '9:00 AM - 5:00 PM ET' }],
